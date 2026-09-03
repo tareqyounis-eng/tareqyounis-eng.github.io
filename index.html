@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tareq — Robotics &amp; Autonomous Systems</title>
+<meta name="description" content="Robotics and autonomous systems engineer. Mechanism design, embedded control, turbomachinery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Semi+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  /* Cyanotype ground — white line work on Prussian blue */
+  --ground:      #0E3149;
+  --ground-deep: #0A2436;
+  --ground-lift: #15415E;
+  --ink:         #F2F8FB;   /* headings, primary line work */
+  --ink-body:    #C9DCE7;   /* body copy */
+  --ink-quiet:   #7FA3B8;   /* annotations, secondary */
+  --line:        rgba(226,240,247,.20);
+  --line-soft:   rgba(226,240,247,.10);
+  --grid-minor:  rgba(226,240,247,.045);
+  --grid-major:  rgba(226,240,247,.085);
+
+  /* The only chromatic break on the page: coordinate axes */
+  --axis-x: #FF6B4A;
+  --axis-y: #7BD88F;
+  --axis-z: #EAF2F6;
+
+  --face-cond: "Barlow Semi Condensed", "Barlow", system-ui, sans-serif;
+  --face-text: "Barlow", system-ui, sans-serif;
+  --face-data: "IBM Plex Mono", ui-monospace, monospace;
+
+  --gutter: clamp(20px, 5vw, 72px);
+  --measure: 68ch;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink-body);
+  font-family:var(--face-text);
+  font-size:clamp(15.5px,.4vw + 14.5px,17px);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+  background-size:80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  background-position:-1px -1px;
+}
+::selection{background:var(--axis-x);color:#2A0E06}
+a{color:var(--ink);text-decoration:none}
+:focus-visible{outline:2px solid var(--axis-x);outline-offset:3px}
+
+/* ============================================================
+   SHEET FRAME — drawing border with zone markers
+   ============================================================ */
+.sheet-frame{position:fixed;inset:10px;border:1px solid var(--line);pointer-events:none;z-index:50}
+.sheet-frame::after{content:"";position:absolute;inset:6px;border:1px solid var(--line-soft)}
+.zone{position:absolute;font:400 9px/1 var(--face-data);letter-spacing:.14em;color:var(--ink-quiet)}
+.zone--t{top:-14px}
+.zone--b{bottom:-14px}
+.zone--l{left:-4px;writing-mode:vertical-rl}
+.zone--r{right:-4px;writing-mode:vertical-rl}
+@media (max-width:960px){.sheet-frame{display:none}}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--gutter)}
+section{padding:clamp(64px,9vw,120px) 0}
+#index{padding-top:clamp(40px,6vw,72px)}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:sticky;top:0;z-index:40;
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line-soft);
+}
+.nav__in{display:flex;align-items:baseline;gap:clamp(14px,3vw,32px);padding:11px var(--gutter);max-width:1180px;margin:0 auto}
+.nav__mark{font:500 13px/1 var(--face-data);letter-spacing:.16em;color:var(--ink);margin-right:auto}
+.nav a{font-family:var(--face-cond);font-size:15px;font-weight:500;color:var(--ink-quiet);letter-spacing:.02em}
+.nav a:hover,.nav a:focus-visible{color:var(--ink)}
+@media (max-width:640px){
+  .nav__in{flex-wrap:wrap;gap:12px}
+  .nav__mark{width:100%;margin-right:0}
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{padding:clamp(48px,8vw,88px) 0 clamp(40px,6vw,64px)}
+.hero__grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(28px,5vw,64px);align-items:center}
+@media (max-width:900px){.hero__grid{grid-template-columns:1fr;gap:32px}}
+
+.hero h1{
+  font-family:var(--face-cond);font-weight:600;
+  font-size:clamp(44px,8.5vw,86px);line-height:.94;
+  letter-spacing:-.015em;color:var(--ink);
+  margin:0 0 18px;
+}
+.hero__lede{font-size:clamp(17px,1.1vw + 14px,20px);line-height:1.5;max-width:34ch;margin:0 0 26px;color:var(--ink-body)}
+.hero__meta{font:400 12px/1.8 var(--face-data);color:var(--ink-quiet);margin:0 0 28px}
+.hero__cta{display:flex;flex-wrap:wrap;gap:10px}
+
+.btn{
+  font-family:var(--face-cond);font-size:15px;font-weight:500;letter-spacing:.02em;
+  padding:9px 18px;border:1px solid var(--line);color:var(--ink);
+  transition:background .18s ease, border-color .18s ease;
+}
+.btn:hover,.btn:focus-visible{background:var(--ground-lift);border-color:var(--ink-quiet)}
+.btn--solid{background:var(--ink);color:var(--ground-deep);border-color:var(--ink)}
+.btn--solid:hover,.btn--solid:focus-visible{background:var(--axis-z);border-color:var(--axis-z);color:var(--ground-deep)}
+
+/* Hero drawing */
+.hero__fig{margin:0}
+.hero__fig svg{width:100%;height:auto;display:block;overflow:visible}
+.dwg-line{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round}
+.dwg-thin{fill:none;stroke:var(--ink-quiet);stroke-width:1;stroke-linecap:round}
+.dwg-dash{fill:none;stroke:var(--ink-quiet);stroke-width:1;stroke-dasharray:7 5;opacity:.75}
+.dwg-joint{fill:var(--ground);stroke:var(--ink);stroke-width:1.6}
+.dwg-note{font:400 10.5px/1 var(--face-data);fill:var(--ink-quiet);letter-spacing:.08em}
+.axis-x{stroke:var(--axis-x);stroke-width:1.8;fill:var(--axis-x)}
+.axis-y{stroke:var(--axis-y);stroke-width:1.8;fill:var(--axis-y)}
+.axis-z{stroke:var(--axis-z);stroke-width:1.8;fill:var(--axis-z)}
+
+/* One orchestrated moment: the drawing inks itself in on load */
+.draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:ink .9s cubic-bezier(.62,.03,.26,1) forwards}
+.draw--2{animation-delay:.42s}
+.draw--3{animation-delay:.74s}
+.fade{opacity:0;animation:appear .5s ease forwards;animation-delay:1.12s}
+@keyframes ink{to{stroke-dashoffset:0}}
+@keyframes appear{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  .draw{animation:none;stroke-dashoffset:0}
+  .fade{animation:none;opacity:1}
+}
+
+/* ============================================================
+   SECTION HEADING — dimension line motif
+   ============================================================ */
+.dim{display:flex;align-items:center;gap:14px;margin:0 0 clamp(28px,4vw,44px)}
+.dim h2{
+  font-family:var(--face-cond);font-weight:600;font-size:clamp(24px,2.4vw,34px);
+  line-height:1.05;color:var(--ink);margin:0;letter-spacing:-.005em;white-space:nowrap;
+}
+.dim__rule{flex:1;height:1px;background:var(--line);position:relative}
+.dim__rule::before,.dim__rule::after{
+  content:"";position:absolute;top:-3.5px;width:1px;height:8px;background:var(--line);
+}
+.dim__rule::before{left:0}
+.dim__rule::after{right:0}
+.dim__tag{font:400 10.5px/1 var(--face-data);letter-spacing:.14em;color:var(--ink-quiet);flex:none}
+
+/* ============================================================
+   SHEET INDEX — the 5-second scan
+   ============================================================ */
+.idx{width:100%;border-collapse:collapse;font-family:var(--face-data);font-size:13px}
+.idx caption{text-align:left;font-family:var(--face-text);font-size:15px;color:var(--ink-quiet);padding-bottom:14px;max-width:var(--measure)}
+.idx th{
+  text-align:left;font-weight:500;font-size:10px;letter-spacing:.14em;
+  color:var(--ink-quiet);padding:0 12px 8px 0;border-bottom:1px solid var(--line);
+}
+.idx td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.idx tr:hover td{background:var(--ground-lift)}
+.idx td:first-child{color:var(--ink);white-space:nowrap}
+.idx__title{font-family:var(--face-text);font-size:15px;color:var(--ink)}
+.idx__title a:hover,.idx__title a:focus-visible{text-decoration:underline;text-decoration-color:var(--axis-x);text-underline-offset:3px}
+.idx__disc{color:var(--ink-quiet);white-space:nowrap}
+@media (max-width:760px){
+  .idx thead{display:none}
+  .idx tr{display:block;border-bottom:1px solid var(--line-soft);padding:12px 0}
+  .idx td{display:block;border:0;padding:1px 0}
+  .idx tr:hover td{background:none}
+  .idx td:first-child{font-size:11px;letter-spacing:.12em;color:var(--ink-quiet)}
+}
+
+/* status chips — drawing annotations, hence uppercase */
+.st{font:500 9.5px/1 var(--face-data);letter-spacing:.12em;padding:4px 7px;border:1px solid var(--line);color:var(--ink-quiet);white-space:nowrap;display:inline-block}
+.st--live{color:var(--axis-y);border-color:color-mix(in srgb,var(--axis-y) 45%,transparent)}
+.st--done{color:var(--ink);border-color:var(--line)}
+
+/* ============================================================
+   DETAIL SHEETS
+   ============================================================ */
+.sheet{border-top:1px solid var(--line);padding:clamp(30px,4vw,48px) 0}
+.sheet:last-of-type{border-bottom:1px solid var(--line)}
+.sheet__grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,52px)}
+@media (max-width:900px){.sheet__grid{grid-template-columns:1fr;gap:26px}}
+
+.sheet__id{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.sheet__pn{font:500 11px/1 var(--face-data);letter-spacing:.14em;color:var(--axis-x)}
+.sheet h3{font-family:var(--face-cond);font-weight:600;font-size:clamp(23px,2.2vw,31px);line-height:1.1;color:var(--ink);margin:0 0 12px}
+.sheet p{margin:0 0 16px;max-width:var(--measure)}
+.sheet__ctx{color:var(--ink-quiet);font-size:14.5px;margin-bottom:10px}
+
+/* parameter table — drawing spec block */
+.spec{width:100%;border-collapse:collapse;font-family:var(--face-data);font-size:12.5px;margin:0 0 16px}
+.spec th{
+  text-align:left;font-weight:400;color:var(--ink-quiet);padding:6px 16px 6px 0;
+  white-space:nowrap;vertical-align:top;border-bottom:1px solid var(--line-soft);width:1%;
+}
+.spec td{padding:6px 0;color:var(--ink-body);border-bottom:1px solid var(--line-soft);vertical-align:top}
+
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.tag{font:400 11px/1 var(--face-data);letter-spacing:.04em;color:var(--ink-quiet);border:1px solid var(--line-soft);padding:4px 8px}
+
+/* figure slot — hatched, honest about what's missing */
+.fig{margin:0}
+.fig__box{
+  aspect-ratio:4/3;border:1px solid var(--line);display:grid;place-content:center;
+  text-align:center;padding:20px;
+  background-image:repeating-linear-gradient(45deg,var(--line-soft) 0 1px,transparent 1px 9px);
+}
+.fig__box img,.fig__box video{width:100%;height:100%;object-fit:cover}
+.fig__slot{font:400 11px/1.7 var(--face-data);letter-spacing:.1em;color:var(--ink-quiet);max-width:30ch}
+.fig figcaption{font:400 11px/1.6 var(--face-data);color:var(--ink-quiet);padding-top:9px;letter-spacing:.04em}
+
+/* ============================================================
+   PROCESSES + ABOUT
+   ============================================================ */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:clamp(22px,3vw,40px)}
+.col h4{font-family:var(--face-cond);font-weight:600;font-size:18px;color:var(--ink);margin:0 0 10px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.col ul{list-style:none;margin:0;padding:0;font-family:var(--face-data);font-size:12.5px;line-height:2}
+.col li{color:var(--ink-body)}
+
+.about{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(26px,4vw,56px);align-items:start}
+@media (max-width:820px){.about{grid-template-columns:1fr}}
+.about p{max-width:var(--measure);margin:0 0 16px}
+
+/* ============================================================
+   CONTACT + TITLE BLOCK
+   ============================================================ */
+.contact p{max-width:52ch;font-size:clamp(17px,1vw + 14px,19px);margin:0 0 22px}
+.tblock{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  border:1px solid var(--line);margin:clamp(48px,7vw,88px) 0 0;
+}
+.tblock div{padding:11px 14px;border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.tblock dt{font:400 9px/1 var(--face-data);letter-spacing:.16em;color:var(--ink-quiet);margin:0 0 6px}
+.tblock dd{font:500 13px/1.3 var(--face-data);color:var(--ink);margin:0}
+footer{padding:0 0 clamp(40px,6vw,72px)}
+.todo{color:var(--axis-x)}
+
+/* ============================================================
+   SIGN IN + EDIT MODE
+   ============================================================ */
+.is-todo{border-style:dashed}
+.nav a.is-active{color:var(--ink)}
+
+.signin{border-top:1px solid var(--line-soft);margin-top:26px;padding-top:20px}
+.signin__toggle{font:400 10.5px/1 var(--face-data);letter-spacing:.14em;color:var(--ink-quiet);background:none;border:0;padding:0;cursor:pointer}
+.signin__toggle:hover,.signin__toggle:focus-visible{color:var(--ink)}
+.signin__form{display:none;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.signin[data-open="1"] .signin__form{display:flex}
+.signin input{font:400 13px/1 var(--face-data);color:var(--ink);background:var(--ground-deep);border:1px solid var(--line);padding:9px 11px;width:148px}
+.signin input::placeholder{color:var(--ink-quiet)}
+.signin__msg{font:400 11px/1.4 var(--face-data);letter-spacing:.06em;color:var(--axis-x)}
+
+.bar{
+  position:fixed;z-index:60;right:16px;bottom:16px;display:none;gap:8px;align-items:center;
+  padding:10px 12px;background:var(--ground-deep);border:1px solid var(--ink-quiet);
+  box-shadow:0 6px 30px rgba(0,0,0,.5);
+}
+body.is-editing .bar{display:flex;flex-wrap:wrap}
+.bar__note{font:400 10px/1.4 var(--face-data);letter-spacing:.14em;color:var(--axis-y);margin-right:4px}
+.bar button{font-family:var(--face-cond);font-size:14px;font-weight:500;color:var(--ink);background:none;border:1px solid var(--line);padding:7px 13px;cursor:pointer}
+.bar button:hover,.bar button:focus-visible{background:var(--ground-lift);border-color:var(--ink-quiet)}
+.bar button.primary{background:var(--ink);color:var(--ground-deep);border-color:var(--ink)}
+.bar button.primary:hover,.bar button.primary:focus-visible{background:var(--axis-z);border-color:var(--axis-z)}
+body.is-editing [contenteditable="true"]{outline:1px dashed color-mix(in srgb,var(--axis-y) 50%,transparent);outline-offset:3px}
+body.is-editing [contenteditable="true"]:focus{outline:2px solid var(--axis-y)}
+@media (max-width:520px){.bar{left:16px;right:16px}}
+</style>
+</head>
+<body>
+
+<div class="sheet-frame" aria-hidden="true">
+  <span class="zone zone--t" style="left:12%">1</span><span class="zone zone--t" style="left:37%">2</span>
+  <span class="zone zone--t" style="left:62%">3</span><span class="zone zone--t" style="left:87%">4</span>
+  <span class="zone zone--b" style="left:12%">1</span><span class="zone zone--b" style="left:37%">2</span>
+  <span class="zone zone--b" style="left:62%">3</span><span class="zone zone--b" style="left:87%">4</span>
+  <span class="zone zone--l" style="top:14%">A</span><span class="zone zone--l" style="top:46%">B</span>
+  <span class="zone zone--l" style="top:78%">C</span>
+  <span class="zone zone--r" style="top:14%">A</span><span class="zone zone--r" style="top:46%">B</span>
+  <span class="zone zone--r" style="top:78%">C</span>
+</div>
+
+<nav class="nav">
+  <div class="nav__in">
+    <span class="nav__mark">TAREQ<span class="todo" title="Add surname">·</span>ROBOTICS</span>
+    <a href="#index">Index</a>
+    <a href="#work">Work</a>
+    <a href="#processes">Processes</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="hero wrap" id="hero">
+  <div class="hero__grid">
+    <div>
+      <h1>I design and build the whole machine.</h1>
+      <p class="hero__lede">Mechanism design through to the control loop — reducers I machine myself, firmware I write myself, turbomachinery I size from first principles.</p>
+      <p class="hero__meta">
+        MS ROBOTICS &amp; AUTONOMOUS SYSTEMS<br>
+        BOSTON UNIVERSITY · LEAP · 2 YR<br>
+        PYTHON / C++ / SOLIDWORKS / EMBEDDED
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--solid" href="#index">See the work</a>
+        <a class="btn" href="#" data-todo="resume">Résumé (PDF)</a>
+      </div>
+    </div>
+
+    <figure class="hero__fig">
+      <svg viewBox="0 0 540 400" role="img" aria-label="Schematic side elevation of a six-axis robot arm with a coordinate triad at the tool centre point.">
+        <!-- ground + hatch -->
+        <path class="dwg-thin draw" style="--len:420" d="M40 352 H500"/>
+        <g class="dwg-thin fade" opacity=".45">
+          <path d="M52 352 l-10 12M82 352 l-10 12M112 352 l-10 12M142 352 l-10 12M172 352 l-10 12M202 352 l-10 12M232 352 l-10 12M262 352 l-10 12M292 352 l-10 12M322 352 l-10 12M352 352 l-10 12M382 352 l-10 12M412 352 l-10 12M442 352 l-10 12M472 352 l-10 12"/>
+        </g>
+
+        <!-- workspace envelope -->
+        <path class="dwg-dash draw draw--3" style="--len:640" d="M150 96 A190 190 0 0 1 340 286"/>
+
+        <!-- base + column -->
+        <path class="dwg-line draw" style="--len:230" d="M104 352 V318 H196 V352 M150 318 V276"/>
+        <!-- link 1 -->
+        <path class="dwg-line draw draw--2" style="--len:150" d="M150 276 L232 158"/>
+        <!-- link 2 -->
+        <path class="dwg-line draw draw--2" style="--len:170" d="M232 158 L392 186"/>
+        <!-- wrist + tool -->
+        <path class="dwg-line draw draw--3" style="--len:60" d="M392 186 L430 176"/>
+
+        <!-- joints -->
+        <g class="fade">
+          <circle class="dwg-joint" cx="150" cy="276" r="8"/>
+          <circle class="dwg-joint" cx="232" cy="158" r="8"/>
+          <circle class="dwg-joint" cx="392" cy="186" r="7"/>
+          <text class="dwg-note" x="126" y="298">J1</text>
+          <text class="dwg-note" x="209" y="146">J2</text>
+          <text class="dwg-note" x="382" y="209">J3</text>
+        </g>
+
+        <!-- coordinate triad at TCP -->
+        <g class="fade">
+          <path class="axis-x" d="M430 176 L484 170"/>
+          <path class="axis-x" d="M484 170 l-8 -3.4 v6.8 z" stroke-width="0"/>
+          <text class="dwg-note" x="488" y="172" fill="var(--axis-x)">X</text>
+          <path class="axis-y" d="M430 176 L424 124"/>
+          <path class="axis-y" d="M424 124 l-3.4 8 h6.8 z" stroke-width="0"/>
+          <text class="dwg-note" x="416" y="115" fill="var(--axis-y)">Y</text>
+          <path class="axis-z" d="M430 176 L398 210"/>
+          <path class="axis-z" d="M398 210 l8.6 1.6 -5.6 -6.2 z" stroke-width="0"/>
+          <text class="dwg-note" x="378" y="226" fill="var(--axis-z)">Z</text>
+        </g>
+
+        <!-- payload leader -->
+        <g class="fade">
+          <path class="dwg-thin" d="M436 168 L466 132 H502"/>
+          <text class="dwg-note" x="466" y="126">PAYLOAD 2 kg</text>
+        </g>
+
+        <!-- reach dimension -->
+        <g class="fade">
+          <path class="dwg-thin" d="M150 286 V386 M430 186 V386 M150 380 H430"/>
+          <path class="dwg-thin" d="M150 380 l9 -3.4 v6.8 z M430 380 l-9 -3.4 v6.8 z" fill="var(--ink-quiet)"/>
+          <text class="dwg-note" x="252" y="374">R = T.B.D.</text>
+        </g>
+      </svg>
+      <figcaption class="dwg-note" style="font-size:11px;letter-spacing:.08em;padding-top:8px;color:var(--ink-quiet)">
+        FIG. 0 — RB-02 KINEMATIC SCHEMATIC, J1–J3 SHOWN
+      </figcaption>
+    </figure>
+  </div>
+</header>
+
+<main>
+
+<section class="wrap" id="index">
+  <div class="dim">
+    <h2>Sheet index</h2>
+    <div class="dim__rule"></div>
+    <span class="dim__tag">6 SHEETS</span>
+  </div>
+  <table class="idx">
+    <caption>Everything below is mine end to end — no kits, no pre-integrated modules. Status is stated plainly; three of the six are mid-build.</caption>
+    <thead>
+      <tr><th scope="col">P/N</th><th scope="col">Title</th><th scope="col">Discipline</th><th scope="col">Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>RB-01</td>
+        <td class="idx__title"><a href="#rb-01">Autonomous differential-drive robot</a></td>
+        <td class="idx__disc">Controls / embedded</td>
+        <td><span class="st st--live">BRING-UP</span></td>
+      </tr>
+      <tr>
+        <td>RB-02</td>
+        <td class="idx__title"><a href="#rb-02">6-DOF arm, self-designed cycloidal reducers</a></td>
+        <td class="idx__disc">Mechanism design</td>
+        <td><span class="st st--live">IN DESIGN</span></td>
+      </tr>
+      <tr>
+        <td>PR-01</td>
+        <td class="idx__title"><a href="#pr-01">Axial-flow turbojet, 150–400 N</a></td>
+        <td class="idx__disc">Turbomachinery</td>
+        <td><span class="st">DESIGN STUDY</span></td>
+      </tr>
+      <tr>
+        <td>AV-01</td>
+        <td class="idx__title"><a href="#av-01">Fixed-wing attitude-hold autopilot</a></td>
+        <td class="idx__disc">Avionics / controls</td>
+        <td><span class="st st--live">BENCH TEST</span></td>
+      </tr>
+      <tr>
+        <td>PE-01</td>
+        <td class="idx__title"><a href="#pe-01">1–3 kW motor dynamometer</a></td>
+        <td class="idx__disc">Power electronics</td>
+        <td><span class="st">PLANNED</span></td>
+      </tr>
+      <tr>
+        <td>SW-01</td>
+        <td class="idx__title"><a href="#sw-01">3D projectile simulator</a></td>
+        <td class="idx__disc">Software</td>
+        <td><span class="st st--done">COMPLETE</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="wrap" id="work">
+  <div class="dim">
+    <h2>Detail sheets</h2>
+    <div class="dim__rule"></div>
+    <span class="dim__tag">REV A</span>
+  </div>
+
+  <!-- ===================== RB-01 ===================== -->
+  <article class="sheet" id="rb-01">
+    <div class="sheet__grid">
+      <div>
+        <div class="sheet__id"><span class="sheet__pn">RB-01</span><span class="st st--live">BRING-UP</span></div>
+        <h3>Autonomous differential-drive robot</h3>
+        <p class="sheet__ctx">Independent build · Jetson Orin · no ROS</p>
+        <p>Written from the bare metal up rather than assembled from a middleware stack. I drive the motor controller over raw I²C, decode quadrature counts straight off the register block, and close the velocity loop myself — so every layer between a commanded twist and a wheel turning is code I can account for.</p>
+        <p>Skipping ROS was deliberate. It costs me the ecosystem and buys me an understanding of odometry, timing and transport that I would not get from configuring someone else's nodes.</p>
+        <table class="spec">
+          <tr><th scope="row">Compute</th><td>NVIDIA Jetson Orin, Ubuntu</td></tr>
+          <tr><th scope="row">Drive</th><td>2 × JGB37-3865-520, 45:1, 12 V</td></tr>
+          <tr><th scope="row">Driver</th><td>Hiwonder, I²C addr 0x34, bus 1</td></tr>
+          <tr><th scope="row">Feedback</th><td>Quadrature encoders, 4 × int32 register read</td></tr>
+          <tr><th scope="row">Next</th><td>RPLIDAR SLAM, stereo fusion, live telemetry page</td></tr>
+        </table>
+        <div class="tags"><span class="tag">Python</span><span class="tag">I²C</span><span class="tag">Odometry</span><span class="tag">PID</span><span class="tag">Jetson</span></div>
+      </div>
+      <figure class="fig">
+        <div class="fig__box"><p class="fig__slot">FIG. 1 SLOT — CLOSED-LOOP STEP RESPONSE, ENCODER DATA</p></div>
+        <figcaption>Replace with: commanded vs. measured wheel velocity, plotted from your own encoder log.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <!-- ===================== RB-02 ===================== -->
+  <article class="sheet" id="rb-02">
+    <div class="sheet__grid">
+      <div>
+        <div class="sheet__id"><span class="sheet__pn">RB-02</span><span class="st st--live">IN DESIGN</span></div>
+        <h3>6-DOF arm with cycloidal reducers I design and cut myself</h3>
+        <p class="sheet__ctx">Independent build · aluminium · machined at BU EPIC</p>
+        <p>Integrated actuator modules were the easy answer and I turned them down. Instead I am designing the cycloidal reducers, cutting the discs on wire EDM, and then measuring what I actually made — backlash, transmission error, efficiency and torque ripple, on my own test fixture.</p>
+        <p>A bought actuator tells an employer I can read a datasheet. A reducer I designed, machined and characterised tells them I can close the loop between an assumption and a measurement.</p>
+        <table class="spec">
+          <tr><th scope="row">Payload</th><td>2 kg</td></tr>
+          <tr><th scope="row">Reach</th><td>T.B.D.</td></tr>
+          <tr><th scope="row">Structure</th><td>Aluminium, machined in-house</td></tr>
+          <tr><th scope="row">Reduction</th><td>Cycloidal, discs on wire EDM</td></tr>
+          <tr><th scope="row">Actuators</th><td>Stepper vs. BLDC — open decision</td></tr>
+          <tr><th scope="row">Budget</th><td>$1,000, all six joints</td></tr>
+        </table>
+        <div class="tags"><span class="tag">SolidWorks</span><span class="tag">Wire EDM</span><span class="tag">Cycloidal drive</span><span class="tag">Metrology</span><span class="tag">Kinematics</span></div>
+      </div>
+      <figure class="fig">
+        <div class="fig__box"><p class="fig__slot">FIG. 2 SLOT — CYCLOIDAL DISC, AS MACHINED</p></div>
+        <figcaption>Replace with: photograph of the first cut disc beside its backlash measurement.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <!-- ===================== PR-01 ===================== -->
+  <article class="sheet" id="pr-01">
+    <div class="sheet__grid">
+      <div>
+        <div class="sheet__id"><span class="sheet__pn">PR-01</span><span class="st">DESIGN STUDY</span></div>
+        <h3>Axial-flow turbojet for small UAVs</h3>
+        <p class="sheet__ctx">Independent design study · six-phase roadmap, phase 1 complete</p>
+        <p>Almost every hobby-scale jet uses a centrifugal compressor because it is far easier to make. I am going fully axial, and the whole architecture follows from what I can actually manufacture: a constant-tip-diameter annulus so the outer casing is a straight bore on a lathe, and ruled-surface blisks cut on wire EDM instead of a 5-axis mill I do not have.</p>
+        <p>Phase 1 is done — mean-line design off the Euler turbomachine equation with a work-done factor of 0.85–0.9, velocity triangles closed at the mean radius. This is a multi-year study, and I am describing it as one.</p>
+        <table class="spec">
+          <tr><th scope="row">Target thrust</th><td>150–400 N</td></tr>
+          <tr><th scope="row">Compressor</th><td>Fully axial, constant tip diameter</td></tr>
+          <tr><th scope="row">Annulus</th><td>R<sub>tip</sub> 31.5 mm, R<sub>hub,in</sub> 15.75 mm</td></tr>
+          <tr><th scope="row">Blisk</th><td>Ruled surfaces, wire EDM</td></tr>
+          <tr><th scope="row">Hot section</th><td>Investment-cast nickel superalloy</td></tr>
+          <tr><th scope="row">Phase</th><td>1 of 6 — mean-line design</td></tr>
+        </table>
+        <div class="tags"><span class="tag">Turbomachinery</span><span class="tag">Gas dynamics</span><span class="tag">DFM</span><span class="tag">Investment casting</span><span class="tag">Python</span></div>
+      </div>
+      <figure class="fig">
+        <div class="fig__box"><p class="fig__slot">FIG. 3 SLOT — VELOCITY TRIANGLES + ANNULUS SECTION</p></div>
+        <figcaption>Replace with: your mean-line tool's output plot, or the annulus cross-section drawing.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <!-- ===================== AV-01 ===================== -->
+  <article class="sheet" id="av-01">
+    <div class="sheet__grid">
+      <div>
+        <div class="sheet__id"><span class="sheet__pn">AV-01</span><span class="st st--live">BENCH TEST</span></div>
+        <h3>Attitude-hold autopilot for a fixed-wing aircraft</h3>
+        <p class="sheet__ctx">Independent build · airframe flown manually, autopilot in bench test</p>
+        <p>The aircraft already flies on manual control. What I am adding is the layer underneath: an IMU-driven attitude-hold loop in C++ that takes over the control surfaces mid-flight, tested first by suspending the airframe from the ceiling and checking that the surfaces answer a disturbance correctly before anything is risked in the air.</p>
+        <table class="spec">
+          <tr><th scope="row">Compute</th><td>Jetson Nano</td></tr>
+          <tr><th scope="row">Attitude</th><td>BNO055 9-DOF IMU</td></tr>
+          <tr><th scope="row">Link</th><td>Futaba R3008SB, SBUS2, T-FHSS Air</td></tr>
+          <tr><th scope="row">Surfaces</th><td>Elevator, aileron, rudder, ESC</td></tr>
+          <tr><th scope="row">Core</th><td>C++; Python for vision</td></tr>
+          <tr><th scope="row">Roadmap</th><td>Ground detection, autonomous takeoff/landing</td></tr>
+        </table>
+        <div class="tags"><span class="tag">C++</span><span class="tag">Sensor fusion</span><span class="tag">SBUS</span><span class="tag">Flight control</span><span class="tag">Jetson</span></div>
+      </div>
+      <figure class="fig">
+        <div class="fig__box"><p class="fig__slot">FIG. 4 SLOT — SUSPENDED BENCH TEST, SURFACE RESPONSE</p></div>
+        <figcaption>Replace with: video still of the string test, surfaces correcting against a hand-applied roll.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <!-- ===================== PE-01 ===================== -->
+  <article class="sheet" id="pe-01">
+    <div class="sheet__grid">
+      <div>
+        <div class="sheet__id"><span class="sheet__pn">PE-01</span><span class="st">PLANNED</span></div>
+        <h3>1–3 kW dynamometer with an inverter and FOC I write myself</h3>
+        <p class="sheet__ctx">Independent build · scoped, not yet started</p>
+        <p>Two machines on a common shaft, one motoring and one loading, so I can pull real torque-speed curves and efficiency maps instead of trusting a vendor's. The inverter is mine down to the gate drivers, current sensing, encoder interface, thermal sensing and the emergency shutdown, with field-oriented control implemented on the microcontroller rather than bought as a library.</p>
+        <table class="spec">
+          <tr><th scope="row">Rating</th><td>1–3 kW, BLDC / PMSM</td></tr>
+          <tr><th scope="row">Power stage</th><td>Own MOSFET inverter, own gate drive</td></tr>
+          <tr><th scope="row">Control</th><td>FOC on STM32 or TI C2000</td></tr>
+          <tr><th scope="row">Instrumentation</th><td>Phase current, torque, RPM, temperature</td></tr>
+          <tr><th scope="row">Output</th><td>Efficiency maps, regen braking, switching losses</td></tr>
+        </table>
+        <div class="tags"><span class="tag">Power electronics</span><span class="tag">FOC</span><span class="tag">STM32</span><span class="tag">PCB design</span><span class="tag">Instrumentation</span></div>
+      </div>
+      <figure class="fig">
+        <div class="fig__box"><p class="fig__slot">FIG. 5 SLOT — EFFICIENCY MAP</p></div>
+        <figcaption>Replace with: efficiency contour over the torque-speed plane. Nothing here until the rig runs.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <!-- ===================== SW-01 ===================== -->
+  <article class="sheet" id="sw-01">
+    <div class="sheet__grid">
+      <div>
+        <div class="sheet__id"><span class="sheet__pn">SW-01</span><span class="st st--done">COMPLETE</span></div>
+        <h3>3D projectile motion simulator</h3>
+        <p class="sheet__ctx">EC-327, Boston University · C++ / raylib · team of three</p>
+        <p>I owned the physics engine, the camera system, the cannon, and the wind and debris systems. Real-time integration with drag and a crosswind field, rendered live, with the camera free to follow the round downrange.</p>
+        <table class="spec">
+          <tr><th scope="row">Language</th><td>C++</td></tr>
+          <tr><th scope="row">Rendering</th><td>raylib</td></tr>
+          <tr><th scope="row">My scope</th><td>Physics, camera, cannon, wind, debris</td></tr>
+          <tr><th scope="row">Team</th><td>With Eric and Sid</td></tr>
+        </table>
+        <div class="tags"><span class="tag">C++</span><span class="tag">raylib</span><span class="tag">Numerical integration</span><span class="tag">Real-time rendering</span></div>
+      </div>
+      <figure class="fig">
+        <div class="fig__box"><p class="fig__slot">FIG. 6 SLOT — SIMULATOR SCREEN CAPTURE</p></div>
+        <figcaption>Replace with: a capture of the sim running. Link the repo you wrote, not the enhanced fork.</figcaption>
+      </figure>
+    </div>
+  </article>
+</section>
+
+<section class="wrap" id="processes">
+  <div class="dim">
+    <h2>Processes and facilities</h2>
+    <div class="dim__rule"></div>
+    <span class="dim__tag">CAPABILITY</span>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <h4>Fabrication</h4>
+      <ul>
+        <li>Manual + CNC machining</li>
+        <li>Wire EDM</li>
+        <li>Investment casting (planned)</li>
+        <li>3D printing</li>
+        <li>BU EPIC facility access</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Design</h4>
+      <ul>
+        <li>SolidWorks</li>
+        <li>Mechanism &amp; reducer design</li>
+        <li>Design for manufacture</li>
+        <li>Tolerance &amp; fit selection</li>
+        <li>Mean-line turbomachinery design</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Embedded &amp; control</h4>
+      <ul>
+        <li>C++, Python</li>
+        <li>I²C, SPI, UART, SBUS</li>
+        <li>IMU sensor fusion</li>
+        <li>Closed-loop motor control</li>
+        <li>Jetson Nano / Orin, STM32</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Test &amp; measurement</h4>
+      <ul>
+        <li>RASTIC motion capture</li>
+        <li>Backlash &amp; transmission error</li>
+        <li>Torque-speed characterisation</li>
+        <li>Oscilloscope, logic analyser</li>
+        <li>Data logging &amp; analysis</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="wrap about" id="about">
+  <div>
+    <div class="dim">
+      <h2>About</h2>
+      <div class="dim__rule"></div>
+    </div>
+    <p>I am a master's student in robotics and autonomous systems at Boston University, in the LEAP program, and I build hardware for a living well before anyone pays me to.</p>
+    <p>What I look for in a project is the part most people buy. On the arm it was the reducer; on the jet engine it was the compressor; on the robot it was the middleware. Each time the decision costs me months and teaches me something a bought part never would — and each time I end up with a measurement I can defend rather than a spec sheet I have to trust.</p>
+    <p>I work across mechanical, electrical and software rather than choosing one, because most of the interesting failures in a robot live at the boundaries between them.</p>
+  </div>
+  <table class="spec" style="margin-top:clamp(28px,4vw,64px)">
+    <tr><th scope="row">Programme</th><td>MS Robotics &amp; Autonomous Systems</td></tr>
+    <tr><th scope="row">University</th><td>Boston University, LEAP</td></tr>
+    <tr><th scope="row">Duration</th><td>2 years</td></tr>
+    <tr><th scope="row">Location</th><td>Massachusetts, USA</td></tr>
+    <tr><th scope="row">Facilities</th><td>EPIC fabrication, RASTIC mocap</td></tr>
+  </table>
+</section>
+
+<section class="wrap contact" id="contact">
+  <div class="dim">
+    <h2>Get in touch</h2>
+    <div class="dim__rule"></div>
+    <span class="dim__tag">CONTACT</span>
+  </div>
+  <p>I am looking for robotics, actuator, propulsion and embedded roles — internship or full-time. If you want to talk through any of the sheets above in detail, I would enjoy that.</p>
+  <div class="hero__cta">
+    <a class="btn btn--solid" href="#" data-todo="email">Email me</a>
+    <a class="btn" href="#" data-todo="github">GitHub</a>
+    <a class="btn" href="#" data-todo="linkedin">LinkedIn</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <dl class="tblock">
+    <div><dt>DRAWN BY</dt><dd>TAREQ <span class="todo">[surname]</span></dd></div>
+    <div><dt>TITLE</dt><dd>PORTFOLIO</dd></div>
+    <div><dt>DISCIPLINE</dt><dd>ROBOTICS</dd></div>
+    <div><dt>SHEETS</dt><dd>6</dd></div>
+    <div><dt>SCALE</dt><dd>N.T.S.</dd></div>
+    <div><dt>DATE</dt><dd>2026-09</dd></div>
+    <div><dt>REV</dt><dd>A</dd></div>
+  </dl>
+
+  <div class="signin" id="signin">
+    <button class="signin__toggle" type="button" id="signin-toggle" aria-expanded="false" aria-controls="signin-form">SIGN IN TO EDIT</button>
+    <div class="signin__form" id="signin-form">
+      <input id="signin-user" type="text" placeholder="username" autocomplete="off" aria-label="Username">
+      <input id="signin-pass" type="password" placeholder="password" autocomplete="off" aria-label="Password">
+      <button class="btn" type="button" id="signin-go">Unlock</button>
+      <span class="signin__msg" id="signin-msg" role="status"></span>
+    </div>
+  </div>
+</footer>
+
+<div class="bar" data-edit-ui role="toolbar" aria-label="Edit mode">
+  <span class="bar__note">EDIT MODE</span>
+  <button type="button" class="primary" id="edit-export">Download index.html</button>
+  <button type="button" id="edit-exit">Exit</button>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   NOTE ON THE CREDENTIALS BELOW
+   This page is static. Anyone can read this script with View Source,
+   so these are a convenience lock only — they keep a stray visitor
+   from nudging your copy, nothing more. Never reuse this password.
+   ------------------------------------------------------------------ */
+var USER = 'tareq';
+var PASS = 'balls';
+
+/* Which text is editable. Add selectors here as you add sections. */
+var EDITABLE = [
+  '.hero h1', '.hero__lede', '.hero__meta',
+  '.dim h2', '.dim__tag', '.idx caption',
+  '.idx__title a', '.idx__disc', '.idx td:first-child', '.st',
+  '.sheet h3', '.sheet__ctx', '.sheet p', '.sheet__pn',
+  '.spec th', '.spec td', '.tag',
+  '.fig__slot', '.fig figcaption',
+  '.col h4', '.col li',
+  '.about p', '.contact p',
+  '.btn', '.tblock dd', '.nav__mark'
+].join(', ');
+
+/* Unfilled links: obvious in the draft, and never a dead end. */
+document.querySelectorAll('[data-todo]').forEach(function (el) {
+  el.classList.add('is-todo');
+  el.title = 'TODO: add ' + el.dataset.todo;
+});
+
+/* Nav reflects the section you are actually reading. */
+var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+var navTargets = navLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+var navObs = new IntersectionObserver(function (entries) {
+  entries.forEach(function (entry) {
+    if (!entry.isIntersecting) return;
+    var i = navTargets.indexOf(entry.target);
+    navLinks.forEach(function (a, j) { a.classList.toggle('is-active', j === i); });
+  });
+}, { rootMargin: '-45% 0px -50% 0px' });
+navTargets.forEach(function (t) { if (t) navObs.observe(t); });
+
+/* ---------------------------- sign in ---------------------------- */
+var signin = document.getElementById('signin');
+var msg = document.getElementById('signin-msg');
+var userEl = document.getElementById('signin-user');
+var passEl = document.getElementById('signin-pass');
+var toggle = document.getElementById('signin-toggle');
+
+toggle.addEventListener('click', function () {
+  var open = signin.getAttribute('data-open') === '1';
+  if (open) { signin.removeAttribute('data-open'); } else { signin.setAttribute('data-open', '1'); }
+  toggle.setAttribute('aria-expanded', String(!open));
+  if (!open) { userEl.focus(); }
+});
+
+function attempt() {
+  if (userEl.value.trim().toLowerCase() === USER && passEl.value === PASS) {
+    userEl.value = ''; passEl.value = ''; msg.textContent = '';
+    signin.removeAttribute('data-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    enterEdit();
+  } else {
+    msg.textContent = 'Wrong username or password.';
+    passEl.value = '';
+    passEl.focus();
+  }
+}
+document.getElementById('signin-go').addEventListener('click', attempt);
+[userEl, passEl].forEach(function (el) {
+  el.addEventListener('keydown', function (e) { if (e.key === 'Enter') attempt(); });
+});
+
+/* --------------------------- edit mode --------------------------- */
+function blockNav(e) { e.preventDefault(); }
+
+function enterEdit() {
+  document.body.classList.add('is-editing');
+  document.querySelectorAll(EDITABLE).forEach(function (el) {
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'true');
+    if (el.tagName === 'A') { el.addEventListener('click', blockNav); }
+  });
+  document.querySelector('.bar button').focus();
+}
+
+function exitEdit() {
+  document.body.classList.remove('is-editing');
+  document.querySelectorAll('[contenteditable="true"]').forEach(function (el) {
+    el.removeAttribute('contenteditable');
+    el.removeAttribute('spellcheck');
+    if (el.tagName === 'A') { el.removeEventListener('click', blockNav); }
+  });
+}
+document.getElementById('edit-exit').addEventListener('click', exitEdit);
+
+/* Paste as plain text so copying from a doc cannot inject styling. */
+document.addEventListener('paste', function (e) {
+  if (!document.body.classList.contains('is-editing')) return;
+  var t = e.target;
+  if (!t.closest || !t.closest('[contenteditable="true"]')) return;
+  e.preventDefault();
+  document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text'));
+});
+
+/* ------------------------- export the page ------------------------ */
+document.getElementById('edit-export').addEventListener('click', function () {
+  var clone = document.documentElement.cloneNode(true);
+
+  /* Strip every trace of edit mode so the file you commit is clean. */
+  clone.querySelectorAll('[data-edit-ui]').forEach(function (el) { el.remove(); });
+  clone.querySelectorAll('[contenteditable]').forEach(function (el) {
+    el.removeAttribute('contenteditable');
+    el.removeAttribute('spellcheck');
+  });
+  clone.querySelectorAll('.is-active').forEach(function (el) { el.classList.remove('is-active'); });
+  clone.querySelectorAll('.is-todo').forEach(function (el) { el.classList.remove('is-todo'); el.removeAttribute('title'); });
+  clone.querySelectorAll('input').forEach(function (el) { el.removeAttribute('value'); });
+  var cs = clone.querySelector('#signin'); if (cs) { cs.removeAttribute('data-open'); }
+  var ct = clone.querySelector('#signin-toggle'); if (ct) { ct.setAttribute('aria-expanded', 'false'); }
+  var cm = clone.querySelector('#signin-msg'); if (cm) { cm.textContent = ''; }
+  var cb = clone.querySelector('body'); if (cb) { cb.classList.remove('is-editing'); }
+
+  /* Put the toolbar back into the exported markup, unrendered until sign-in. */
+  var bar = document.querySelector('.bar');
+  if (bar && cb) {
+    var freshBar = bar.cloneNode(true);
+    freshBar.querySelectorAll('[contenteditable]').forEach(function (el) { el.removeAttribute('contenteditable'); });
+    cb.appendChild(freshBar);
+  }
+
+  var html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  var url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+  var a = document.createElement('a');
+  a.href = url; a.download = 'index.html';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
