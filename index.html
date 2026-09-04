@@ -209,7 +209,6 @@ footer { border-top: 1px solid var(--rule); padding: 28px 0; }
 .signin-toggle { font-size: 11px; letter-spacing: .1em; color: var(--ink-soft); background: none; border: none; padding: 0; cursor: pointer; font-family: var(--sans); }
 .signin-toggle:hover { color: var(--ink); }
 .signin-form { display: none; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
-.signin[data-open="1"] .signin-form { display: flex; }
 .signin input { font-family: var(--sans); font-size: 13px; color: var(--ink); background: var(--cream); border: 1px solid var(--rule); padding: 8px 10px; width: 140px; }
 .signin input:focus { outline: 1px solid var(--ink); }
 .signin-msg { font-size: 12px; color: #8B3A3A; }
@@ -437,7 +436,7 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
 
     <div class="signin" id="signin">
       <button class="signin-toggle" type="button" id="signin-toggle" aria-expanded="false">SIGN IN TO EDIT</button>
-      <div class="signin-form">
+      <div class="signin-form" id="signin-form">
         <input id="signin-user" type="text" placeholder="username" autocomplete="off" aria-label="Username">
         <input id="signin-pass" type="password" placeholder="password" autocomplete="off" aria-label="Password">
         <button class="btn" type="button" id="signin-go" style="padding:8px 16px">Unlock</button>
@@ -484,17 +483,18 @@ var userEl = document.getElementById('signin-user');
 var passEl = document.getElementById('signin-pass');
 var toggle = document.getElementById('signin-toggle');
 
+var form = document.getElementById('signin-form');
 toggle.addEventListener('click', function(){
-  var open = signin.getAttribute('data-open') === '1';
-  if (open) { signin.removeAttribute('data-open'); } else { signin.setAttribute('data-open','1'); }
-  toggle.setAttribute('aria-expanded', String(!open));
-  if (!open) setTimeout(function(){ userEl.focus(); }, 20);
+  var hidden = form.style.display === 'none' || form.style.display === '';
+  form.style.display = hidden ? 'flex' : 'none';
+  toggle.setAttribute('aria-expanded', String(hidden));
+  if (hidden) setTimeout(function(){ userEl.focus(); }, 20);
 });
 
 function attempt(){
   if (userEl.value.trim().toLowerCase()===USER && passEl.value===PASS){
     userEl.value=''; passEl.value=''; msg.textContent='';
-    signin.removeAttribute('data-open');
+    form.style.display = 'none';
     toggle.setAttribute('aria-expanded','false');
     enterEdit();
   } else {
