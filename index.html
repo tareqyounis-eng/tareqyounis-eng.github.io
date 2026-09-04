@@ -7,7 +7,7 @@
 <meta name="description" content="Robotics and autonomous systems engineer. Mechanism design, embedded control, turbomachinery.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500&family=Inter+Tight:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --cream:   #F7F3EE;
@@ -18,7 +18,7 @@
   --rule:    rgba(26,24,20,.12);
   --accent:  #2D2926;
   --sans: "DM Sans", system-ui, sans-serif;
-  --serif: "DM Serif Display", Georgia, serif;
+  --serif: "Inter Tight", "DM Sans", system-ui, sans-serif;
   --max: 900px;
   --gutter: clamp(22px, 5vw, 64px);
 }
@@ -56,7 +56,7 @@ nav {
   display: flex; align-items: baseline; gap: 32px;
   height: 52px;
 }
-.nav-mark { font-family: var(--serif); font-size: 17px; letter-spacing: .01em; margin-right: auto; text-decoration: none; }
+.nav-mark { font-family: var(--serif); font-size: 15px; font-weight: 600; letter-spacing: -.02em; margin-right: auto; text-decoration: none; }
 nav a { font-size: 13.5px; font-weight: 400; color: var(--ink-mid); text-decoration: none; letter-spacing: .02em; }
 nav a:hover, nav a.active { color: var(--ink); }
 @media (max-width: 560px) { .nav-in { gap: 18px; } nav a.hide-sm { display: none; } }
@@ -75,11 +75,11 @@ nav a:hover, nav a.active { color: var(--ink); }
   font-family: var(--serif);
   font-size: clamp(38px, 6.5vw, 68px);
   line-height: 1.08;
-  font-weight: 400;
+  font-weight: 600;
   margin: 0 0 20px;
-  letter-spacing: -.01em;
+  letter-spacing: -.03em;
 }
-.hero h1 em { font-style: italic; color: var(--ink-mid); }
+.hero h1 em { font-style: normal; font-weight: 500; color: var(--ink-mid); }
 .hero-lede { font-size: clamp(16px, .6vw + 14px, 19px); max-width: 38ch; color: var(--ink-mid); margin: 0 0 28px; font-weight: 300; }
 .hero-meta { font-size: 12.5px; letter-spacing: .08em; color: var(--ink-soft); line-height: 2; margin: 0 0 32px; }
 .cta { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -131,7 +131,7 @@ body.is-editing .headshot { cursor: pointer; }
 }
 .section-head h2 {
   font-family: var(--serif); font-size: clamp(22px, 2.2vw, 30px);
-  font-weight: 400; margin: 0; white-space: nowrap; letter-spacing: -.005em;
+  font-weight: 600; margin: 0; white-space: nowrap; letter-spacing: -.025em;
 }
 .section-rule { flex: 1; height: 1px; background: var(--rule); }
 .section-label { font-size: 11px; letter-spacing: .14em; color: var(--ink-soft); flex: none; }
@@ -155,13 +155,14 @@ body.is-editing .headshot { cursor: pointer; }
 @media (max-width: 680px) { .project-even .project-img { order: 0; } }
 
 .pn { font-size: 11px; letter-spacing: .14em; color: var(--ink-soft); margin-bottom: 8px; }
-.project h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(20px,2vw,26px); margin: 0 0 6px; line-height: 1.2; }
+.project h3 { font-family: var(--serif); font-weight: 600; font-size: clamp(18px,1.8vw,23px); margin: 0 0 6px; line-height: 1.2; letter-spacing: -.02em; }
 .project-ctx { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
 .project p { margin: 0 0 16px; font-size: 15px; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
 .tag { font-size: 11px; letter-spacing: .04em; color: var(--ink-mid); border: 1px solid var(--rule); padding: 4px 9px; }
 .st { font-size: 10.5px; letter-spacing: .1em; padding: 3px 8px; border: 1px solid var(--rule); color: var(--ink-soft); display: inline-block; }
 .st-live { border-color: rgba(26,24,20,.35); color: var(--ink); }
+.project-status { margin: 0 0 10px; }
 
 /* project image slot */
 .project-img {
@@ -192,7 +193,7 @@ body.is-editing .project-img:hover .img-hint { opacity: 1; }
 
 /* ── capabilities ── */
 .caps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: clamp(20px,3vw,36px); padding-bottom: clamp(48px,7vw,88px); }
-.cap h4 { font-family: var(--serif); font-weight: 400; font-size: 18px; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); }
+.cap h4 { font-family: var(--serif); font-weight: 600; font-size: 14px; letter-spacing: .03em; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); }
 .cap ul { list-style: none; margin: 0; padding: 0; font-size: 13.5px; color: var(--ink-mid); line-height: 2.1; }
 
 /* ── contact ── */
@@ -230,7 +231,7 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
 
 <nav>
   <div class="nav-in">
-    <a class="nav-mark" href="#hero">Tareq<span style="font-style:italic"> Y.</span></a>
+    <a class="nav-mark" href="#hero">Tareq Y.</a>
     <a href="#about" class="hide-sm">About</a>
     <a href="#work">Work</a>
     <a href="#contact">Contact</a>
@@ -300,7 +301,7 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
 
       <div class="project project-odd" id="rb-01">
         <div class="project-text">
-          <p class="pn">RB-01 &nbsp;·&nbsp; <span class="st st-live">IN PROGRESS</span></p>
+          <p class="project-status"><span class="st st-live">IN PROGRESS</span></p>
           <h3>Autonomous differential-drive robot</h3>
           <p class="project-ctx">Independent build · Jetson Orin · no ROS</p>
           <p>Written from bare metal — I drive the motor controller over raw I²C, decode quadrature counts off the register block, and close the velocity loop myself. Skipping ROS was deliberate: it costs the ecosystem and buys a real understanding of odometry, timing, and transport.</p>
@@ -316,7 +317,7 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
 
       <div class="project project-even" id="rb-02">
         <div class="project-text">
-          <p class="pn">RB-02 &nbsp;·&nbsp; <span class="st st-live">IN PROGRESS</span></p>
+          <p class="project-status"><span class="st st-live">IN PROGRESS</span></p>
           <h3>6-DOF arm with self-designed cycloidal reducers</h3>
           <p class="project-ctx">Independent build · aluminium · BU EPIC</p>
           <p>Integrated actuator modules were the easy answer and I turned them down. I am designing the cycloidal reducers, cutting the discs on wire EDM, and then measuring what I actually made — backlash, transmission error, efficiency, and torque ripple.</p>
@@ -332,7 +333,7 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
 
       <div class="project project-odd" id="pr-01">
         <div class="project-text">
-          <p class="pn">PR-01 &nbsp;·&nbsp; <span class="st">DESIGN STUDY</span></p>
+          <p class="project-status"><span class="st">DESIGN STUDY</span></p>
           <h3>Axial-flow turbojet for small UAVs</h3>
           <p class="project-ctx">Independent design study · six-phase roadmap, phase 1 complete</p>
           <p>Almost every hobby-scale jet uses a centrifugal compressor because it is far easier to make. I am going fully axial. The whole architecture follows from what I can manufacture: a constant-tip-diameter annulus for straight-bore lathe work, and ruled-surface blisks cut on wire EDM.</p>
@@ -348,7 +349,7 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
 
       <div class="project project-even" id="av-01">
         <div class="project-text">
-          <p class="pn">AV-01 &nbsp;·&nbsp; <span class="st st-live">BENCH TEST</span></p>
+          <p class="project-status"><span class="st st-live">BENCH TEST</span></p>
           <h3>Attitude-hold autopilot, fixed-wing aircraft</h3>
           <p class="project-ctx">Independent build · Jetson Nano · BNO055 IMU</p>
           <p>The aircraft already flies on manual control. I am adding an IMU-driven attitude-hold loop in C++ that takes over the control surfaces mid-flight, tested by suspending the airframe from the ceiling and checking that the surfaces answer a disturbance correctly before anything is risked in the air.</p>
@@ -363,7 +364,7 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
 
       <div class="project project-odd" id="pe-01">
         <div class="project-text">
-          <p class="pn">PE-01 &nbsp;·&nbsp; <span class="st">PLANNED</span></p>
+          <p class="project-status"><span class="st">PLANNED</span></p>
           <h3>1–3 kW motor dynamometer</h3>
           <p class="project-ctx">Independent build · own inverter and FOC</p>
           <p>Two machines on a common shaft, one motoring and one loading. The inverter is mine down to the gate drivers and current sensing, with field-oriented control on an STM32. Output: real torque-speed curves and efficiency maps, not vendor specs.</p>
@@ -376,19 +377,6 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
         </div>
       </div>
 
-      <div class="project project-even" id="sw-01">
-        <div class="project-text">
-          <p class="pn">SW-01 &nbsp;·&nbsp; <span class="st">COMPLETE</span></p>
-          <h3>3D projectile motion simulator</h3>
-          <p class="project-ctx">EC-327, Boston University · C++ / raylib</p>
-          <p>I owned the physics engine, camera system, cannon, and wind and debris systems. Real-time integration with drag and a crosswind field, rendered live. Written with Eric and Sid.</p>
-          <div class="tags"><span class="tag">C++</span><span class="tag">raylib</span><span class="tag">Numerical integration</span><span class="tag">Real-time rendering</span></div>
-        </div>
-        <div class="project-img" data-slot="6">
-          <img data-project-img="6" src="" alt="" style="display:none">
-          <div class="img-placeholder">ADD PROJECT IMAGE</div>
-          <div class="img-hint">Upload image</div>
-        </div>
       </div>
 
     </div>
@@ -498,10 +486,9 @@ var toggle = document.getElementById('signin-toggle');
 
 toggle.addEventListener('click', function(){
   var open = signin.getAttribute('data-open') === '1';
-  signin.toggleAttribute('data-open', !open);
-  if (open) signin.removeAttribute('data-open'); else signin.setAttribute('data-open','1');
+  if (open) { signin.removeAttribute('data-open'); } else { signin.setAttribute('data-open','1'); }
   toggle.setAttribute('aria-expanded', String(!open));
-  if (!open) userEl.focus();
+  if (!open) setTimeout(function(){ userEl.focus(); }, 20);
 });
 
 function attempt(){
