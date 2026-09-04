@@ -3,1159 +3,623 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tareq — Robotics &amp; Autonomous Systems</title>
+<title>Tareq — Robotics & Autonomous Systems</title>
 <meta name="description" content="Robotics and autonomous systems engineer. Mechanism design, embedded control, turbomachinery.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Semi+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   TOKENS — stylised circuit board
-   ============================================================ */
-:root{
-  --board:       #0B120E;   /* substrate at centre */
-  --board-edge:  #020403;   /* substrate at the vignette edge */
-  --board-lift:  #13201A;   /* raised surfaces, hovers */
-  --board-deep:  #060B08;   /* inset surfaces, inputs */
-
-  --silk:        #E8F1EB;   /* silkscreen white — headings, line work */
-  --silk-body:   #A9C0B4;   /* body copy */
-  --silk-quiet:  #6C8879;   /* annotations, secondary */
-
-  --green:       #3FD98D;   /* illuminated copper */
-  --green-deep:  #14442F;   /* unlit solder mask */
-  --gold:        #E3B24C;   /* ENIG pad + frontier */
-  --gold-deep:   #6B4F1C;
-  --maroon:      #B0435A;   /* second mask colour */
-  --maroon-deep: #4C1926;
-
-  --line:        rgba(232,241,235,.17);
-  --line-soft:   rgba(232,241,235,.085);
-
-  --face-cond: "Barlow Semi Condensed", "Barlow", system-ui, sans-serif;
-  --face-text: "Barlow", system-ui, sans-serif;
-  --face-data: "IBM Plex Mono", ui-monospace, monospace;
-
-  --gutter: clamp(20px, 5vw, 72px);
-  --measure: 68ch;
+:root {
+  --cream:   #F7F3EE;
+  --cream-d: #EDE8E1;
+  --ink:     #1A1814;
+  --ink-mid: #5C574F;
+  --ink-soft:#9B9590;
+  --rule:    rgba(26,24,20,.12);
+  --accent:  #2D2926;
+  --sans: "DM Sans", system-ui, sans-serif;
+  --serif: "DM Serif Display", Georgia, serif;
+  --max: 900px;
+  --gutter: clamp(22px, 5vw, 64px);
 }
 
-*,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;background:var(--board-edge)}
-body{
-  margin:0;
-  background:var(--board);
-  color:var(--silk-body);
-  font-family:var(--face-text);
-  font-size:clamp(15.5px,.4vw + 14.5px,17px);
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--cream); }
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: clamp(15px, .35vw + 14px, 17px);
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
 }
-::selection{background:var(--green);color:#04120B}
-a{color:var(--silk);text-decoration:none}
-:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+::selection { background: var(--ink); color: var(--cream); }
+a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--ink); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
-/* ============================================================
-   BOARD LAYERS — copper, cursor bloom, vignette
-   ============================================================ */
-#copper{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-#bloom{
-  position:fixed;top:0;left:0;width:620px;height:620px;margin:-310px 0 0 -310px;
-  z-index:1;pointer-events:none;opacity:0;transition:opacity .5s ease;
-  background:radial-gradient(circle closest-side,
-    rgba(63,217,141,.13) 0%, rgba(63,217,141,.055) 34%, rgba(227,178,76,.028) 58%, transparent 74%);
+/* ── layout ── */
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+hr { border: none; border-top: 1px solid var(--rule); margin: 0; }
+
+/* ── nav ── */
+nav {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(247,243,238,.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
 }
-#vignette{
-  position:fixed;inset:0;z-index:2;pointer-events:none;
-  background:
-    radial-gradient(ellipse 128% 108% at 50% 42%, transparent 26%, rgba(2,4,3,.62) 68%, var(--board-edge) 100%),
-    linear-gradient(to bottom, rgba(2,4,3,.75) 0%, transparent 12%, transparent 88%, rgba(2,4,3,.85) 100%);
+.nav-in {
+  max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter);
+  display: flex; align-items: baseline; gap: 32px;
+  height: 52px;
 }
-.layer{position:relative;z-index:3}
+.nav-mark { font-family: var(--serif); font-size: 17px; letter-spacing: .01em; margin-right: auto; text-decoration: none; }
+nav a { font-size: 13.5px; font-weight: 400; color: var(--ink-mid); text-decoration: none; letter-spacing: .02em; }
+nav a:hover, nav a.active { color: var(--ink); }
+@media (max-width: 560px) { .nav-in { gap: 18px; } nav a.hide-sm { display: none; } }
 
-/* ============================================================
-   SHEET FRAME
-   ============================================================ */
-.sheet-frame{position:fixed;inset:10px;border:1px solid var(--line-soft);pointer-events:none;z-index:4}
-.sheet-frame::after{content:"";position:absolute;inset:6px;border:1px solid rgba(232,241,235,.04)}
-.zone{position:absolute;font:400 9px/1 var(--face-data);letter-spacing:.14em;color:var(--silk-quiet);opacity:.7}
-.zone--t{top:-14px}
-.zone--b{bottom:-14px}
-.zone--l{left:-4px;writing-mode:vertical-rl}
-.zone--r{right:-4px;writing-mode:vertical-rl}
-@media (max-width:960px){.sheet-frame{display:none}}
-
-/* ============================================================
-   LAYOUT
-   ============================================================ */
-.wrap{max-width:1180px;margin:0 auto;padding:0 var(--gutter)}
-section{padding:clamp(64px,9vw,120px) 0}
-#index{padding-top:clamp(40px,6vw,72px)}
-
-/* ============================================================
-   NAV
-   ============================================================ */
-.nav{
-  position:sticky;top:0;z-index:40;
-  background:rgba(6,11,8,.82);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line-soft);
+/* ── hero ── */
+.hero { padding: clamp(56px, 9vw, 100px) 0 clamp(40px, 6vw, 72px); }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
 }
-.nav__in{display:flex;align-items:baseline;gap:clamp(14px,3vw,32px);padding:11px var(--gutter);max-width:1180px;margin:0 auto}
-.nav__mark{font:500 13px/1 var(--face-data);letter-spacing:.16em;color:var(--silk);margin-right:auto}
-.nav a{font-family:var(--face-cond);font-size:15px;font-weight:500;color:var(--silk-quiet);letter-spacing:.02em}
-.nav a:hover,.nav a:focus-visible,.nav a.is-active{color:var(--green)}
-@media (max-width:640px){
-  .nav__in{flex-wrap:wrap;gap:12px}
-  .nav__mark{width:100%;margin-right:0}
+@media (max-width: 640px) { .hero-grid { grid-template-columns: 1fr; } }
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(38px, 6.5vw, 68px);
+  line-height: 1.08;
+  font-weight: 400;
+  margin: 0 0 20px;
+  letter-spacing: -.01em;
 }
-
-/* ============================================================
-   HERO
-   ============================================================ */
-.hero{padding:clamp(48px,8vw,88px) 0 clamp(40px,6vw,64px)}
-.hero__grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(28px,5vw,64px);align-items:center}
-@media (max-width:900px){.hero__grid{grid-template-columns:1fr;gap:32px}}
-
-.hero h1{
-  font-family:var(--face-cond);font-weight:600;
-  font-size:clamp(44px,8.5vw,86px);line-height:.94;
-  letter-spacing:-.015em;color:var(--silk);margin:0 0 18px;
+.hero h1 em { font-style: italic; color: var(--ink-mid); }
+.hero-lede { font-size: clamp(16px, .6vw + 14px, 19px); max-width: 38ch; color: var(--ink-mid); margin: 0 0 28px; font-weight: 300; }
+.hero-meta { font-size: 12.5px; letter-spacing: .08em; color: var(--ink-soft); line-height: 2; margin: 0 0 32px; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  font-family: var(--sans); font-size: 13.5px; font-weight: 400; letter-spacing: .04em;
+  padding: 10px 22px; border: 1px solid var(--ink); color: var(--ink);
+  text-decoration: none; transition: background .15s, color .15s;
+  display: inline-block;
 }
-.hero__lede{font-size:clamp(17px,1.1vw + 14px,20px);line-height:1.5;max-width:34ch;margin:0 0 26px;color:var(--silk-body)}
-.hero__meta{font:400 12px/1.8 var(--face-data);color:var(--silk-quiet);margin:0 0 28px}
-.hero__cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn:hover { background: var(--ink); color: var(--cream); }
+.btn-ghost { background: transparent; }
 
-.btn{
-  font-family:var(--face-cond);font-size:15px;font-weight:500;letter-spacing:.02em;
-  padding:9px 18px;border:1px solid var(--line);color:var(--silk);
-  transition:background .18s ease,border-color .18s ease,color .18s ease;
+/* headshot */
+.headshot-wrap { flex: none; }
+.headshot {
+  width: clamp(110px, 18vw, 168px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: var(--cream-d);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  position: relative;
 }
-.btn:hover,.btn:focus-visible{background:var(--board-lift);border-color:var(--green);color:var(--green)}
-.btn--solid{background:var(--green);color:#04120B;border-color:var(--green)}
-.btn--solid:hover,.btn--solid:focus-visible{background:var(--gold);border-color:var(--gold);color:#160E02}
-
-/* hero simulation */
-.hero__fig{margin:0}
-.sim{
-  position:relative;border:1px solid var(--line-soft);
-  background:linear-gradient(160deg,rgba(20,68,47,.20),rgba(6,11,8,.55));
+.headshot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.headshot-placeholder {
+  text-align: center;
+  font-size: 11px; letter-spacing: .1em; color: var(--ink-soft);
+  padding: 12px;
+  pointer-events: none;
+  line-height: 1.6;
 }
-.sim canvas{display:block;width:100%;height:auto}
-.sim__hud{
-  position:absolute;left:12px;bottom:10px;right:12px;
-  display:flex;gap:18px;flex-wrap:wrap;
-  font:400 10.5px/1 var(--face-data);letter-spacing:.12em;color:var(--silk-quiet);
-  pointer-events:none;
+.headshot-hint {
+  position: absolute; inset: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(26,24,20,.5);
+  font-size: 11px; letter-spacing: .08em; color: var(--cream);
+  opacity: 0; transition: opacity .2s;
+  pointer-events: none;
 }
-.sim__hud b{font-weight:500;color:var(--green)}
-.hero__cap{font:400 11px/1.6 var(--face-data);letter-spacing:.08em;color:var(--silk-quiet);padding-top:9px;margin:0}
+body.is-editing .headshot:hover .headshot-hint { opacity: 1; }
+body.is-editing .headshot { cursor: pointer; }
 
-/* ============================================================
-   SECTION HEADING — dimension line
-   ============================================================ */
-.dim{display:flex;align-items:center;gap:14px;margin:0 0 clamp(28px,4vw,44px)}
-.dim h2{
-  font-family:var(--face-cond);font-weight:600;font-size:clamp(24px,2.4vw,34px);
-  line-height:1.05;color:var(--silk);margin:0;letter-spacing:-.005em;white-space:nowrap;
+/* ── section headings ── */
+.section-head {
+  display: flex; align-items: baseline; gap: 16px;
+  padding: clamp(40px,6vw,72px) 0 clamp(24px,3vw,36px);
 }
-.dim__rule{flex:1;height:1px;background:linear-gradient(90deg,var(--green-deep),var(--line));position:relative}
-.dim__rule::before,.dim__rule::after{content:"";position:absolute;top:-3.5px;width:1px;height:8px;background:var(--line)}
-.dim__rule::before{left:0}
-.dim__rule::after{right:0}
-.dim__tag{font:400 10.5px/1 var(--face-data);letter-spacing:.14em;color:var(--gold);flex:none}
-
-/* ============================================================
-   SHEET INDEX
-   ============================================================ */
-.idx{width:100%;border-collapse:collapse;font-family:var(--face-data);font-size:13px}
-.idx caption{text-align:left;font-family:var(--face-text);font-size:15px;color:var(--silk-quiet);padding-bottom:14px;max-width:var(--measure)}
-.idx th{text-align:left;font-weight:500;font-size:10px;letter-spacing:.14em;color:var(--silk-quiet);padding:0 12px 8px 0;border-bottom:1px solid var(--line)}
-.idx td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line-soft);vertical-align:top}
-.idx tr:hover td{background:var(--board-lift)}
-.idx td:first-child{color:var(--gold);white-space:nowrap}
-.idx__title{font-family:var(--face-text);font-size:15px;color:var(--silk)}
-.idx__title a:hover,.idx__title a:focus-visible{color:var(--green)}
-.idx__disc{color:var(--silk-quiet);white-space:nowrap}
-@media (max-width:760px){
-  .idx thead{display:none}
-  .idx tr{display:block;border-bottom:1px solid var(--line-soft);padding:12px 0}
-  .idx td{display:block;border:0;padding:1px 0}
-  .idx tr:hover td{background:none}
-  .idx td:first-child{font-size:11px;letter-spacing:.12em}
+.section-head h2 {
+  font-family: var(--serif); font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 400; margin: 0; white-space: nowrap; letter-spacing: -.005em;
 }
+.section-rule { flex: 1; height: 1px; background: var(--rule); }
+.section-label { font-size: 11px; letter-spacing: .14em; color: var(--ink-soft); flex: none; }
 
-.st{font:500 9.5px/1 var(--face-data);letter-spacing:.12em;padding:4px 7px;border:1px solid var(--line);color:var(--silk-quiet);white-space:nowrap;display:inline-block}
-.st--live{color:var(--green);border-color:rgba(63,217,141,.42);background:rgba(63,217,141,.06)}
-.st--done{color:var(--gold);border-color:rgba(227,178,76,.4)}
-.st--cold{color:var(--maroon);border-color:rgba(176,67,90,.4)}
+/* ── about ── */
+.about-grid { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr); gap: clamp(28px,4vw,56px); padding-bottom: clamp(40px,6vw,72px); align-items: start; }
+@media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; } }
+.about-grid p { margin: 0 0 16px; }
+.about-stats { border-top: 1px solid var(--rule); }
+.stat { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--rule); font-size: 13.5px; }
+.stat-label { color: var(--ink-soft); font-size: 11.5px; letter-spacing: .06em; }
+.stat-val { font-weight: 400; text-align: right; }
 
-/* ============================================================
-   DETAIL SHEETS
-   ============================================================ */
-.sheet{border-top:1px solid var(--line-soft);padding:clamp(30px,4vw,48px) 0}
-.sheet:last-of-type{border-bottom:1px solid var(--line-soft)}
-.sheet__grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,52px)}
-@media (max-width:900px){.sheet__grid{grid-template-columns:1fr;gap:26px}}
-.sheet__id{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.sheet__pn{font:500 11px/1 var(--face-data);letter-spacing:.14em;color:var(--gold)}
-.sheet h3{font-family:var(--face-cond);font-weight:600;font-size:clamp(23px,2.2vw,31px);line-height:1.1;color:var(--silk);margin:0 0 12px}
-.sheet p{margin:0 0 16px;max-width:var(--measure)}
-.sheet__ctx{color:var(--silk-quiet);font-size:14.5px;margin-bottom:10px}
+/* ── projects ── */
+.projects { padding-bottom: clamp(48px,7vw,88px); }
+.project { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(22px,4vw,52px); padding: clamp(28px,4vw,44px) 0; border-top: 1px solid var(--rule); align-items: start; }
+.project:last-child { border-bottom: 1px solid var(--rule); }
+@media (max-width: 680px) { .project { grid-template-columns: 1fr; } }
+.project-odd { }
+.project-even .project-img { order: -1; }
+@media (max-width: 680px) { .project-even .project-img { order: 0; } }
 
-.spec{width:100%;border-collapse:collapse;font-family:var(--face-data);font-size:12.5px;margin:0 0 16px}
-.spec th{text-align:left;font-weight:400;color:var(--silk-quiet);padding:6px 16px 6px 0;white-space:nowrap;vertical-align:top;border-bottom:1px solid var(--line-soft);width:1%}
-.spec td{padding:6px 0;color:var(--silk-body);border-bottom:1px solid var(--line-soft);vertical-align:top}
+.pn { font-size: 11px; letter-spacing: .14em; color: var(--ink-soft); margin-bottom: 8px; }
+.project h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(20px,2vw,26px); margin: 0 0 6px; line-height: 1.2; }
+.project-ctx { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
+.project p { margin: 0 0 16px; font-size: 15px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.tag { font-size: 11px; letter-spacing: .04em; color: var(--ink-mid); border: 1px solid var(--rule); padding: 4px 9px; }
+.st { font-size: 10.5px; letter-spacing: .1em; padding: 3px 8px; border: 1px solid var(--rule); color: var(--ink-soft); display: inline-block; }
+.st-live { border-color: rgba(26,24,20,.35); color: var(--ink); }
 
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0}
-.tag{font:400 11px/1 var(--face-data);letter-spacing:.04em;color:var(--silk-quiet);border:1px solid var(--line-soft);padding:4px 8px}
-
-/* figure slot — hatched copper pour */
-.fig{margin:0}
-.fig__box{
-  aspect-ratio:4/3;border:1px solid var(--line-soft);display:grid;place-content:center;
-  text-align:center;padding:20px;
-  background-image:repeating-linear-gradient(45deg,rgba(20,68,47,.5) 0 1px,transparent 1px 8px);
-  background-color:rgba(6,11,8,.4);
+/* project image slot */
+.project-img {
+  aspect-ratio: 4/3;
+  background: var(--cream-d);
+  border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  position: relative;
+  cursor: default;
 }
-.fig__box img,.fig__box video{width:100%;height:100%;object-fit:cover}
-.fig__slot{font:400 11px/1.7 var(--face-data);letter-spacing:.1em;color:var(--silk-quiet);max-width:30ch}
-.fig figcaption{font:400 11px/1.6 var(--face-data);color:var(--silk-quiet);padding-top:9px;letter-spacing:.04em}
-
-/* ============================================================
-   PROCESSES + ABOUT
-   ============================================================ */
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:clamp(22px,3vw,40px)}
-.col h4{font-family:var(--face-cond);font-weight:600;font-size:18px;color:var(--silk);margin:0 0 10px;padding-bottom:9px;border-bottom:1px solid var(--green-deep)}
-.col ul{list-style:none;margin:0;padding:0;font-family:var(--face-data);font-size:12.5px;line-height:2}
-.col li{color:var(--silk-body)}
-
-.about{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(26px,4vw,56px);align-items:start}
-@media (max-width:820px){.about{grid-template-columns:1fr}}
-.about p{max-width:var(--measure);margin:0 0 16px}
-
-/* ============================================================
-   CONTACT + TITLE BLOCK
-   ============================================================ */
-.contact p{max-width:52ch;font-size:clamp(17px,1vw + 14px,19px);margin:0 0 22px}
-.tblock{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));border:1px solid var(--line-soft);margin:clamp(48px,7vw,88px) 0 0;background:rgba(6,11,8,.45)}
-.tblock div{padding:11px 14px;border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
-.tblock dt{font:400 9px/1 var(--face-data);letter-spacing:.16em;color:var(--silk-quiet);margin:0 0 6px}
-.tblock dd{font:500 13px/1.3 var(--face-data);color:var(--silk);margin:0}
-footer{padding:0 0 clamp(40px,6vw,72px)}
-.todo{color:var(--maroon)}
-
-/* ============================================================
-   SIGN IN + EDIT MODE
-   ============================================================ */
-.is-todo{border-style:dashed}
-.signin{border-top:1px solid var(--line-soft);margin-top:26px;padding-top:20px}
-.signin__toggle{font:400 10.5px/1 var(--face-data);letter-spacing:.14em;color:var(--silk-quiet);background:none;border:0;padding:0;cursor:pointer}
-.signin__toggle:hover,.signin__toggle:focus-visible{color:var(--green)}
-.signin__form{display:none;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
-.signin[data-open="1"] .signin__form{display:flex}
-.signin input{font:400 13px/1 var(--face-data);color:var(--silk);background:var(--board-deep);border:1px solid var(--line);padding:9px 11px;width:148px}
-.signin input::placeholder{color:var(--silk-quiet)}
-.signin__msg{font:400 11px/1.4 var(--face-data);letter-spacing:.06em;color:var(--maroon)}
-
-.bar{position:fixed;z-index:60;right:16px;bottom:16px;display:none;gap:8px;align-items:center;padding:10px 12px;background:var(--board-deep);border:1px solid var(--green);box-shadow:0 6px 34px rgba(0,0,0,.6)}
-body.is-editing .bar{display:flex;flex-wrap:wrap}
-.bar__note{font:400 10px/1.4 var(--face-data);letter-spacing:.14em;color:var(--green);margin-right:4px}
-.bar button{font-family:var(--face-cond);font-size:14px;font-weight:500;color:var(--silk);background:none;border:1px solid var(--line);padding:7px 13px;cursor:pointer}
-.bar button:hover,.bar button:focus-visible{background:var(--board-lift);border-color:var(--green)}
-.bar button.primary{background:var(--green);color:#04120B;border-color:var(--green)}
-.bar button.primary:hover,.bar button.primary:focus-visible{background:var(--gold);border-color:var(--gold);color:#160E02}
-body.is-editing [contenteditable="true"]{outline:1px dashed rgba(227,178,76,.55);outline-offset:3px}
-body.is-editing [contenteditable="true"]:focus{outline:2px solid var(--gold)}
-@media (max-width:520px){.bar{left:16px;right:16px}}
-
-@media (prefers-reduced-motion:reduce){
-  #bloom{display:none}
-  *{transition-duration:.01ms !important}
+body.is-editing .project-img { cursor: pointer; }
+.project-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-placeholder {
+  text-align: center; font-size: 11px; letter-spacing: .1em;
+  color: var(--ink-soft); line-height: 1.8; padding: 16px;
+  pointer-events: none;
 }
+.img-hint {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(26,24,20,.42);
+  font-size: 11.5px; letter-spacing: .08em; color: var(--cream);
+  opacity: 0; transition: opacity .2s;
+  pointer-events: none;
+}
+body.is-editing .project-img:hover .img-hint { opacity: 1; }
+
+/* ── capabilities ── */
+.caps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: clamp(20px,3vw,36px); padding-bottom: clamp(48px,7vw,88px); }
+.cap h4 { font-family: var(--serif); font-weight: 400; font-size: 18px; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); }
+.cap ul { list-style: none; margin: 0; padding: 0; font-size: 13.5px; color: var(--ink-mid); line-height: 2.1; }
+
+/* ── contact ── */
+.contact { padding-bottom: clamp(56px,8vw,96px); }
+.contact p { font-size: clamp(17px, 1vw + 14px, 21px); max-width: 42ch; font-weight: 300; color: var(--ink-mid); margin: 0 0 28px; }
+
+/* ── footer ── */
+footer { border-top: 1px solid var(--rule); padding: 28px 0; }
+.footer-in { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px; letter-spacing: .06em; color: var(--ink-soft); }
+
+/* ── sign-in ── */
+.signin { margin-top: 20px; }
+.signin-toggle { font-size: 11px; letter-spacing: .1em; color: var(--ink-soft); background: none; border: none; padding: 0; cursor: pointer; font-family: var(--sans); }
+.signin-toggle:hover { color: var(--ink); }
+.signin-form { display: none; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.signin[data-open="1"] .signin-form { display: flex; }
+.signin input { font-family: var(--sans); font-size: 13px; color: var(--ink); background: var(--cream); border: 1px solid var(--rule); padding: 8px 10px; width: 140px; }
+.signin input:focus { outline: 1px solid var(--ink); }
+.signin-msg { font-size: 12px; color: #8B3A3A; }
+
+/* ── edit bar ── */
+.bar { display: none; position: fixed; bottom: 16px; right: 16px; z-index: 60; background: var(--ink); color: var(--cream); padding: 10px 14px; gap: 10px; align-items: center; box-shadow: 0 4px 24px rgba(0,0,0,.18); }
+body.is-editing .bar { display: flex; flex-wrap: wrap; }
+.bar-note { font-size: 11px; letter-spacing: .12em; margin-right: 4px; opacity: .7; }
+.bar button { font-family: var(--sans); font-size: 13px; background: none; border: 1px solid rgba(247,243,238,.3); color: var(--cream); padding: 6px 14px; cursor: pointer; letter-spacing: .02em; }
+.bar button:hover { background: rgba(247,243,238,.12); }
+.bar button.primary { background: var(--cream); color: var(--ink); border-color: var(--cream); }
+.bar button.primary:hover { background: var(--cream-d); }
+body.is-editing [contenteditable="true"] { outline: 1px dashed rgba(26,24,20,.25); outline-offset: 3px; }
+body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); }
+@media (max-width: 480px) { .bar { left: 16px; right: 16px; } }
 </style>
 </head>
 <body>
 
-<canvas id="copper" aria-hidden="true"></canvas>
-<div id="bloom" aria-hidden="true"></div>
-<div id="vignette" aria-hidden="true"></div>
-
-<div class="sheet-frame" aria-hidden="true">
-  <span class="zone zone--t" style="left:12%">1</span><span class="zone zone--t" style="left:37%">2</span>
-  <span class="zone zone--t" style="left:62%">3</span><span class="zone zone--t" style="left:87%">4</span>
-  <span class="zone zone--b" style="left:12%">1</span><span class="zone zone--b" style="left:37%">2</span>
-  <span class="zone zone--b" style="left:62%">3</span><span class="zone zone--b" style="left:87%">4</span>
-  <span class="zone zone--l" style="top:14%">A</span><span class="zone zone--l" style="top:46%">B</span>
-  <span class="zone zone--l" style="top:78%">C</span>
-  <span class="zone zone--r" style="top:14%">A</span><span class="zone zone--r" style="top:46%">B</span>
-  <span class="zone zone--r" style="top:78%">C</span>
-</div>
-
-<div class="layer">
-
-<nav class="nav">
-  <div class="nav__in">
-    <span class="nav__mark">TAREQ<span class="todo" title="Add surname">·</span>ROBOTICS</span>
-    <a href="#index">Index</a>
+<nav>
+  <div class="nav-in">
+    <a class="nav-mark" href="#hero">Tareq<span style="font-style:italic"> Y.</span></a>
+    <a href="#about" class="hide-sm">About</a>
     <a href="#work">Work</a>
-    <a href="#processes">Processes</a>
-    <a href="#about">About</a>
     <a href="#contact">Contact</a>
+    <a href="#" data-todo="resume" style="margin-left:auto">Résumé ↗</a>
   </div>
 </nav>
 
-<header class="hero wrap" id="hero">
-  <div class="hero__grid">
-    <div>
-      <h1>I design and build the whole machine.</h1>
-      <p class="hero__lede">Mechanism design through to the control loop — reducers I machine myself, firmware I write myself, turbomachinery I size from first principles.</p>
-      <p class="hero__meta">
-        MS ROBOTICS &amp; AUTONOMOUS SYSTEMS<br>
-        BOSTON UNIVERSITY · LEAP · 2 YR<br>
-        PYTHON / C++ / SOLIDWORKS / EMBEDDED
-      </p>
-      <div class="hero__cta">
-        <a class="btn btn--solid" href="#index">See the work</a>
-        <a class="btn" href="#" data-todo="resume">Résumé (PDF)</a>
-      </div>
-    </div>
+<div class="wrap">
 
-    <figure class="hero__fig">
-      <div class="sim">
-        <canvas id="sim" role="img" aria-label="Four robots exploring an unknown floor plan from above, revealing walls and open floor as their sensors sweep."></canvas>
-        <div class="sim__hud">
-          <span>COVERAGE <b id="hud-cov">0%</b></span>
-          <span>AGENTS <b id="hud-agents">4</b></span>
-          <span>FRONTIERS <b id="hud-front">0</b></span>
+  <!-- HERO -->
+  <header class="hero" id="hero">
+    <div class="hero-grid">
+      <div>
+        <h1>Robotics &amp; autonomous<br><em>systems engineer.</em></h1>
+        <p class="hero-lede">I design and build the whole machine — from the reducer I machine myself to the firmware I write myself.</p>
+        <p class="hero-meta">MS ROBOTICS · BOSTON UNIVERSITY · LEAP<br>PYTHON / C++ / SOLIDWORKS / EMBEDDED</p>
+        <div class="cta">
+          <a class="btn" href="#work">See the work</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
         </div>
       </div>
-      <p class="hero__cap">FIG. 0 — FRONTIER EXPLORATION, FOUR AGENTS, UNKNOWN FLOOR PLAN</p>
-    </figure>
-  </div>
-</header>
-
-<main>
-
-<section class="wrap" id="index">
-  <div class="dim">
-    <h2>Sheet index</h2>
-    <div class="dim__rule"></div>
-    <span class="dim__tag">6 SHEETS</span>
-  </div>
-  <table class="idx">
-    <caption>Everything below is mine end to end — no kits, no pre-integrated modules. Status is stated plainly; three of the six are mid-build.</caption>
-    <thead>
-      <tr><th scope="col">P/N</th><th scope="col">Title</th><th scope="col">Discipline</th><th scope="col">Status</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>RB-01</td><td class="idx__title"><a href="#rb-01">Autonomous differential-drive robot</a></td><td class="idx__disc">Controls / embedded</td><td><span class="st st--live">BRING-UP</span></td></tr>
-      <tr><td>RB-02</td><td class="idx__title"><a href="#rb-02">6-DOF arm, self-designed cycloidal reducers</a></td><td class="idx__disc">Mechanism design</td><td><span class="st st--live">IN DESIGN</span></td></tr>
-      <tr><td>PR-01</td><td class="idx__title"><a href="#pr-01">Axial-flow turbojet, 150–400 N</a></td><td class="idx__disc">Turbomachinery</td><td><span class="st st--cold">DESIGN STUDY</span></td></tr>
-      <tr><td>AV-01</td><td class="idx__title"><a href="#av-01">Fixed-wing attitude-hold autopilot</a></td><td class="idx__disc">Avionics / controls</td><td><span class="st st--live">BENCH TEST</span></td></tr>
-      <tr><td>PE-01</td><td class="idx__title"><a href="#pe-01">1–3 kW motor dynamometer</a></td><td class="idx__disc">Power electronics</td><td><span class="st st--cold">PLANNED</span></td></tr>
-      <tr><td>SW-01</td><td class="idx__title"><a href="#sw-01">3D projectile simulator</a></td><td class="idx__disc">Software</td><td><span class="st st--done">COMPLETE</span></td></tr>
-    </tbody>
-  </table>
-</section>
-
-<section class="wrap" id="work">
-  <div class="dim">
-    <h2>Detail sheets</h2>
-    <div class="dim__rule"></div>
-    <span class="dim__tag">REV A</span>
-  </div>
-
-  <article class="sheet" id="rb-01">
-    <div class="sheet__grid">
-      <div>
-        <div class="sheet__id"><span class="sheet__pn">RB-01</span><span class="st st--live">BRING-UP</span></div>
-        <h3>Autonomous differential-drive robot</h3>
-        <p class="sheet__ctx">Independent build · Jetson Orin · no ROS</p>
-        <p>Written from the bare metal up rather than assembled from a middleware stack. I drive the motor controller over raw I²C, decode quadrature counts straight off the register block, and close the velocity loop myself — so every layer between a commanded twist and a wheel turning is code I can account for.</p>
-        <p>Skipping ROS was deliberate. It costs me the ecosystem and buys me an understanding of odometry, timing and transport that I would not get from configuring someone else's nodes.</p>
-        <table class="spec">
-          <tr><th scope="row">Compute</th><td>NVIDIA Jetson Orin, Ubuntu</td></tr>
-          <tr><th scope="row">Drive</th><td>2 × JGB37-3865-520, 45:1, 12 V</td></tr>
-          <tr><th scope="row">Driver</th><td>Hiwonder, I²C addr 0x34, bus 1</td></tr>
-          <tr><th scope="row">Feedback</th><td>Quadrature encoders, 4 × int32 register read</td></tr>
-          <tr><th scope="row">Next</th><td>RPLIDAR SLAM, stereo fusion, live telemetry page</td></tr>
-        </table>
-        <div class="tags"><span class="tag">Python</span><span class="tag">I²C</span><span class="tag">Odometry</span><span class="tag">PID</span><span class="tag">Jetson</span></div>
+      <div class="headshot-wrap">
+        <div class="headshot" id="headshot-click" title="Click to upload a photo in edit mode">
+          <img id="headshot-img" src="" alt="Tareq" style="display:none">
+          <div class="headshot-placeholder" id="headshot-ph">YOUR<br>PHOTO</div>
+          <div class="headshot-hint">Upload photo</div>
+        </div>
       </div>
-      <figure class="fig">
-        <div class="fig__box"><p class="fig__slot">FIG. 1 SLOT — CLOSED-LOOP STEP RESPONSE, ENCODER DATA</p></div>
-        <figcaption>Replace with: commanded vs. measured wheel velocity, plotted from your own encoder log.</figcaption>
-      </figure>
     </div>
-  </article>
+  </header>
 
-  <article class="sheet" id="rb-02">
-    <div class="sheet__grid">
-      <div>
-        <div class="sheet__id"><span class="sheet__pn">RB-02</span><span class="st st--live">IN DESIGN</span></div>
-        <h3>6-DOF arm with cycloidal reducers I design and cut myself</h3>
-        <p class="sheet__ctx">Independent build · aluminium · machined at BU EPIC</p>
-        <p>Integrated actuator modules were the easy answer and I turned them down. Instead I am designing the cycloidal reducers, cutting the discs on wire EDM, and then measuring what I actually made — backlash, transmission error, efficiency and torque ripple, on my own test fixture.</p>
-        <p>A bought actuator tells an employer I can read a datasheet. A reducer I designed, machined and characterised tells them I can close the loop between an assumption and a measurement.</p>
-        <table class="spec">
-          <tr><th scope="row">Payload</th><td>2 kg</td></tr>
-          <tr><th scope="row">Reach</th><td>T.B.D.</td></tr>
-          <tr><th scope="row">Structure</th><td>Aluminium, machined in-house</td></tr>
-          <tr><th scope="row">Reduction</th><td>Cycloidal, discs on wire EDM</td></tr>
-          <tr><th scope="row">Actuators</th><td>Stepper vs. BLDC — open decision</td></tr>
-          <tr><th scope="row">Budget</th><td>$1,000, all six joints</td></tr>
-        </table>
-        <div class="tags"><span class="tag">SolidWorks</span><span class="tag">Wire EDM</span><span class="tag">Cycloidal drive</span><span class="tag">Metrology</span><span class="tag">Kinematics</span></div>
-      </div>
-      <figure class="fig">
-        <div class="fig__box"><p class="fig__slot">FIG. 2 SLOT — CYCLOIDAL DISC, AS MACHINED</p></div>
-        <figcaption>Replace with: photograph of the first cut disc beside its backlash measurement.</figcaption>
-      </figure>
-    </div>
-  </article>
+  <hr>
 
-  <article class="sheet" id="pr-01">
-    <div class="sheet__grid">
-      <div>
-        <div class="sheet__id"><span class="sheet__pn">PR-01</span><span class="st st--cold">DESIGN STUDY</span></div>
-        <h3>Axial-flow turbojet for small UAVs</h3>
-        <p class="sheet__ctx">Independent design study · six-phase roadmap, phase 1 complete</p>
-        <p>Almost every hobby-scale jet uses a centrifugal compressor because it is far easier to make. I am going fully axial, and the whole architecture follows from what I can actually manufacture: a constant-tip-diameter annulus so the outer casing is a straight bore on a lathe, and ruled-surface blisks cut on wire EDM instead of a 5-axis mill I do not have.</p>
-        <p>Phase 1 is done — mean-line design off the Euler turbomachine equation with a work-done factor of 0.85–0.9, velocity triangles closed at the mean radius. This is a multi-year study, and I am describing it as one.</p>
-        <table class="spec">
-          <tr><th scope="row">Target thrust</th><td>150–400 N</td></tr>
-          <tr><th scope="row">Compressor</th><td>Fully axial, constant tip diameter</td></tr>
-          <tr><th scope="row">Annulus</th><td>R<sub>tip</sub> 31.5 mm, R<sub>hub,in</sub> 15.75 mm</td></tr>
-          <tr><th scope="row">Blisk</th><td>Ruled surfaces, wire EDM</td></tr>
-          <tr><th scope="row">Hot section</th><td>Investment-cast nickel superalloy</td></tr>
-          <tr><th scope="row">Phase</th><td>1 of 6 — mean-line design</td></tr>
-        </table>
-        <div class="tags"><span class="tag">Turbomachinery</span><span class="tag">Gas dynamics</span><span class="tag">DFM</span><span class="tag">Investment casting</span><span class="tag">Python</span></div>
-      </div>
-      <figure class="fig">
-        <div class="fig__box"><p class="fig__slot">FIG. 3 SLOT — VELOCITY TRIANGLES + ANNULUS SECTION</p></div>
-        <figcaption>Replace with: your mean-line tool's output plot, or the annulus cross-section drawing.</figcaption>
-      </figure>
-    </div>
-  </article>
-
-  <article class="sheet" id="av-01">
-    <div class="sheet__grid">
-      <div>
-        <div class="sheet__id"><span class="sheet__pn">AV-01</span><span class="st st--live">BENCH TEST</span></div>
-        <h3>Attitude-hold autopilot for a fixed-wing aircraft</h3>
-        <p class="sheet__ctx">Independent build · airframe flown manually, autopilot in bench test</p>
-        <p>The aircraft already flies on manual control. What I am adding is the layer underneath: an IMU-driven attitude-hold loop in C++ that takes over the control surfaces mid-flight, tested first by suspending the airframe from the ceiling and checking that the surfaces answer a disturbance correctly before anything is risked in the air.</p>
-        <table class="spec">
-          <tr><th scope="row">Compute</th><td>Jetson Nano</td></tr>
-          <tr><th scope="row">Attitude</th><td>BNO055 9-DOF IMU</td></tr>
-          <tr><th scope="row">Link</th><td>Futaba R3008SB, SBUS2, T-FHSS Air</td></tr>
-          <tr><th scope="row">Surfaces</th><td>Elevator, aileron, rudder, ESC</td></tr>
-          <tr><th scope="row">Core</th><td>C++; Python for vision</td></tr>
-          <tr><th scope="row">Roadmap</th><td>Ground detection, autonomous takeoff/landing</td></tr>
-        </table>
-        <div class="tags"><span class="tag">C++</span><span class="tag">Sensor fusion</span><span class="tag">SBUS</span><span class="tag">Flight control</span><span class="tag">Jetson</span></div>
-      </div>
-      <figure class="fig">
-        <div class="fig__box"><p class="fig__slot">FIG. 4 SLOT — SUSPENDED BENCH TEST, SURFACE RESPONSE</p></div>
-        <figcaption>Replace with: video still of the string test, surfaces correcting against a hand-applied roll.</figcaption>
-      </figure>
-    </div>
-  </article>
-
-  <article class="sheet" id="pe-01">
-    <div class="sheet__grid">
-      <div>
-        <div class="sheet__id"><span class="sheet__pn">PE-01</span><span class="st st--cold">PLANNED</span></div>
-        <h3>1–3 kW dynamometer with an inverter and FOC I write myself</h3>
-        <p class="sheet__ctx">Independent build · scoped, not yet started</p>
-        <p>Two machines on a common shaft, one motoring and one loading, so I can pull real torque-speed curves and efficiency maps instead of trusting a vendor's. The inverter is mine down to the gate drivers, current sensing, encoder interface, thermal sensing and the emergency shutdown, with field-oriented control implemented on the microcontroller rather than bought as a library.</p>
-        <table class="spec">
-          <tr><th scope="row">Rating</th><td>1–3 kW, BLDC / PMSM</td></tr>
-          <tr><th scope="row">Power stage</th><td>Own MOSFET inverter, own gate drive</td></tr>
-          <tr><th scope="row">Control</th><td>FOC on STM32 or TI C2000</td></tr>
-          <tr><th scope="row">Instrumentation</th><td>Phase current, torque, RPM, temperature</td></tr>
-          <tr><th scope="row">Output</th><td>Efficiency maps, regen braking, switching losses</td></tr>
-        </table>
-        <div class="tags"><span class="tag">Power electronics</span><span class="tag">FOC</span><span class="tag">STM32</span><span class="tag">PCB design</span><span class="tag">Instrumentation</span></div>
-      </div>
-      <figure class="fig">
-        <div class="fig__box"><p class="fig__slot">FIG. 5 SLOT — EFFICIENCY MAP</p></div>
-        <figcaption>Replace with: efficiency contour over the torque-speed plane. Nothing here until the rig runs.</figcaption>
-      </figure>
-    </div>
-  </article>
-
-  <article class="sheet" id="sw-01">
-    <div class="sheet__grid">
-      <div>
-        <div class="sheet__id"><span class="sheet__pn">SW-01</span><span class="st st--done">COMPLETE</span></div>
-        <h3>3D projectile motion simulator</h3>
-        <p class="sheet__ctx">EC-327, Boston University · C++ / raylib · team of three</p>
-        <p>I owned the physics engine, the camera system, the cannon, and the wind and debris systems. Real-time integration with drag and a crosswind field, rendered live, with the camera free to follow the round downrange.</p>
-        <table class="spec">
-          <tr><th scope="row">Language</th><td>C++</td></tr>
-          <tr><th scope="row">Rendering</th><td>raylib</td></tr>
-          <tr><th scope="row">My scope</th><td>Physics, camera, cannon, wind, debris</td></tr>
-          <tr><th scope="row">Team</th><td>With Eric and Sid</td></tr>
-        </table>
-        <div class="tags"><span class="tag">C++</span><span class="tag">raylib</span><span class="tag">Numerical integration</span><span class="tag">Real-time rendering</span></div>
-      </div>
-      <figure class="fig">
-        <div class="fig__box"><p class="fig__slot">FIG. 6 SLOT — SIMULATOR SCREEN CAPTURE</p></div>
-        <figcaption>Replace with: a capture of the sim running. Link the repo you wrote, not the enhanced fork.</figcaption>
-      </figure>
-    </div>
-  </article>
-</section>
-
-<section class="wrap" id="processes">
-  <div class="dim">
-    <h2>Processes and facilities</h2>
-    <div class="dim__rule"></div>
-    <span class="dim__tag">CAPABILITY</span>
-  </div>
-  <div class="cols">
-    <div class="col">
-      <h4>Fabrication</h4>
-      <ul><li>Manual + CNC machining</li><li>Wire EDM</li><li>Investment casting (planned)</li><li>3D printing</li><li>BU EPIC facility access</li></ul>
-    </div>
-    <div class="col">
-      <h4>Design</h4>
-      <ul><li>SolidWorks</li><li>Mechanism &amp; reducer design</li><li>Design for manufacture</li><li>Tolerance &amp; fit selection</li><li>Mean-line turbomachinery design</li></ul>
-    </div>
-    <div class="col">
-      <h4>Embedded &amp; control</h4>
-      <ul><li>C++, Python</li><li>I²C, SPI, UART, SBUS</li><li>IMU sensor fusion</li><li>Closed-loop motor control</li><li>Jetson Nano / Orin, STM32</li></ul>
-    </div>
-    <div class="col">
-      <h4>Test &amp; measurement</h4>
-      <ul><li>RASTIC motion capture</li><li>Backlash &amp; transmission error</li><li>Torque-speed characterisation</li><li>Oscilloscope, logic analyser</li><li>Data logging &amp; analysis</li></ul>
-    </div>
-  </div>
-</section>
-
-<section class="wrap about" id="about">
-  <div>
-    <div class="dim">
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-head">
       <h2>About</h2>
-      <div class="dim__rule"></div>
+      <div class="section-rule"></div>
     </div>
-    <p>I am a master's student in robotics and autonomous systems at Boston University, in the LEAP program, and I build hardware for a living well before anyone pays me to.</p>
-    <p>What I look for in a project is the part most people buy. On the arm it was the reducer; on the jet engine it was the compressor; on the robot it was the middleware. Each time the decision costs me months and teaches me something a bought part never would — and each time I end up with a measurement I can defend rather than a spec sheet I have to trust.</p>
-    <p>I work across mechanical, electrical and software rather than choosing one, because most of the interesting failures in a robot live at the boundaries between them.</p>
-  </div>
-  <table class="spec" style="margin-top:clamp(28px,4vw,64px)">
-    <tr><th scope="row">Programme</th><td>MS Robotics &amp; Autonomous Systems</td></tr>
-    <tr><th scope="row">University</th><td>Boston University, LEAP</td></tr>
-    <tr><th scope="row">Duration</th><td>2 years</td></tr>
-    <tr><th scope="row">Location</th><td>Massachusetts, USA</td></tr>
-    <tr><th scope="row">Facilities</th><td>EPIC fabrication, RASTIC mocap</td></tr>
-  </table>
-</section>
+    <div class="about-grid">
+      <div>
+        <p>I am a master's student in robotics and autonomous systems at Boston University, in the LEAP program. I build hardware for a living well before anyone pays me to.</p>
+        <p>What I look for in a project is the part most people buy. On the arm it was the reducer; on the jet engine it was the compressor; on the robot it was the middleware. Each time the decision costs me months and teaches me something a bought part never would.</p>
+        <p>I work across mechanical, electrical, and software rather than choosing one — because most of the interesting failures in a robot live at the boundaries between them.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat"><span class="stat-label">PROGRAMME</span><span class="stat-val">MS Robotics &amp; Autonomous Systems</span></div>
+        <div class="stat"><span class="stat-label">UNIVERSITY</span><span class="stat-val">Boston University, LEAP</span></div>
+        <div class="stat"><span class="stat-label">DURATION</span><span class="stat-val">2 years</span></div>
+        <div class="stat"><span class="stat-label">LOCATION</span><span class="stat-val">Massachusetts, USA</span></div>
+        <div class="stat"><span class="stat-label">FACILITIES</span><span class="stat-val">EPIC fabrication, RASTIC mocap</span></div>
+      </div>
+    </div>
+  </section>
 
-<section class="wrap contact" id="contact">
-  <div class="dim">
-    <h2>Get in touch</h2>
-    <div class="dim__rule"></div>
-    <span class="dim__tag">CONTACT</span>
-  </div>
-  <p>I am looking for robotics, actuator, propulsion and embedded roles — internship or full-time. If you want to talk through any of the sheets above in detail, I would enjoy that.</p>
-  <div class="hero__cta">
-    <a class="btn btn--solid" href="#" data-todo="email">Email me</a>
-    <a class="btn" href="#" data-todo="github">GitHub</a>
-    <a class="btn" href="#" data-todo="linkedin">LinkedIn</a>
-  </div>
-</section>
+  <hr>
 
-</main>
+  <!-- WORK -->
+  <section id="work">
+    <div class="section-head">
+      <h2>Work</h2>
+      <div class="section-rule"></div>
+      <span class="section-label">6 PROJECTS</span>
+    </div>
 
-<footer class="wrap">
-  <dl class="tblock">
-    <div><dt>DRAWN BY</dt><dd>TAREQ <span class="todo">[surname]</span></dd></div>
-    <div><dt>TITLE</dt><dd>PORTFOLIO</dd></div>
-    <div><dt>DISCIPLINE</dt><dd>ROBOTICS</dd></div>
-    <div><dt>SHEETS</dt><dd>6</dd></div>
-    <div><dt>SCALE</dt><dd>N.T.S.</dd></div>
-    <div><dt>DATE</dt><dd>2026-09</dd></div>
-    <div><dt>REV</dt><dd>A</dd></div>
-  </dl>
+    <div class="projects">
 
-  <div class="signin" id="signin">
-    <button class="signin__toggle" type="button" id="signin-toggle" aria-expanded="false" aria-controls="signin-form">SIGN IN TO EDIT</button>
-    <div class="signin__form" id="signin-form">
-      <input id="signin-user" type="text" placeholder="username" autocomplete="off" aria-label="Username">
-      <input id="signin-pass" type="password" placeholder="password" autocomplete="off" aria-label="Password">
-      <button class="btn" type="button" id="signin-go">Unlock</button>
-      <span class="signin__msg" id="signin-msg" role="status"></span>
+      <div class="project project-odd" id="rb-01">
+        <div class="project-text">
+          <p class="pn">RB-01 &nbsp;·&nbsp; <span class="st st-live">IN PROGRESS</span></p>
+          <h3>Autonomous differential-drive robot</h3>
+          <p class="project-ctx">Independent build · Jetson Orin · no ROS</p>
+          <p>Written from bare metal — I drive the motor controller over raw I²C, decode quadrature counts off the register block, and close the velocity loop myself. Skipping ROS was deliberate: it costs the ecosystem and buys a real understanding of odometry, timing, and transport.</p>
+          <p>Long-term goals: RPLIDAR SLAM, stereo camera fusion, live web telemetry.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">I²C</span><span class="tag">Odometry</span><span class="tag">PID</span><span class="tag">Jetson Orin</span></div>
+        </div>
+        <div class="project-img" data-slot="1">
+          <img data-project-img="1" src="" alt="" style="display:none">
+          <div class="img-placeholder">ADD PROJECT IMAGE</div>
+          <div class="img-hint">Upload image</div>
+        </div>
+      </div>
+
+      <div class="project project-even" id="rb-02">
+        <div class="project-text">
+          <p class="pn">RB-02 &nbsp;·&nbsp; <span class="st st-live">IN PROGRESS</span></p>
+          <h3>6-DOF arm with self-designed cycloidal reducers</h3>
+          <p class="project-ctx">Independent build · aluminium · BU EPIC</p>
+          <p>Integrated actuator modules were the easy answer and I turned them down. I am designing the cycloidal reducers, cutting the discs on wire EDM, and then measuring what I actually made — backlash, transmission error, efficiency, and torque ripple.</p>
+          <p>A bought actuator tells an employer I can read a datasheet. A reducer I designed, machined, and characterised tells them something else.</p>
+          <div class="tags"><span class="tag">SolidWorks</span><span class="tag">Wire EDM</span><span class="tag">Cycloidal drive</span><span class="tag">Metrology</span></div>
+        </div>
+        <div class="project-img" data-slot="2">
+          <img data-project-img="2" src="" alt="" style="display:none">
+          <div class="img-placeholder">ADD PROJECT IMAGE</div>
+          <div class="img-hint">Upload image</div>
+        </div>
+      </div>
+
+      <div class="project project-odd" id="pr-01">
+        <div class="project-text">
+          <p class="pn">PR-01 &nbsp;·&nbsp; <span class="st">DESIGN STUDY</span></p>
+          <h3>Axial-flow turbojet for small UAVs</h3>
+          <p class="project-ctx">Independent design study · six-phase roadmap, phase 1 complete</p>
+          <p>Almost every hobby-scale jet uses a centrifugal compressor because it is far easier to make. I am going fully axial. The whole architecture follows from what I can manufacture: a constant-tip-diameter annulus for straight-bore lathe work, and ruled-surface blisks cut on wire EDM.</p>
+          <p>Phase 1 complete — mean-line design off the Euler turbomachine equation, velocity triangles closed at the mean radius. Targeting 150–400 N.</p>
+          <div class="tags"><span class="tag">Turbomachinery</span><span class="tag">Gas dynamics</span><span class="tag">DFM</span><span class="tag">Python</span></div>
+        </div>
+        <div class="project-img" data-slot="3">
+          <img data-project-img="3" src="" alt="" style="display:none">
+          <div class="img-placeholder">ADD PROJECT IMAGE</div>
+          <div class="img-hint">Upload image</div>
+        </div>
+      </div>
+
+      <div class="project project-even" id="av-01">
+        <div class="project-text">
+          <p class="pn">AV-01 &nbsp;·&nbsp; <span class="st st-live">BENCH TEST</span></p>
+          <h3>Attitude-hold autopilot, fixed-wing aircraft</h3>
+          <p class="project-ctx">Independent build · Jetson Nano · BNO055 IMU</p>
+          <p>The aircraft already flies on manual control. I am adding an IMU-driven attitude-hold loop in C++ that takes over the control surfaces mid-flight, tested by suspending the airframe from the ceiling and checking that the surfaces answer a disturbance correctly before anything is risked in the air.</p>
+          <div class="tags"><span class="tag">C++</span><span class="tag">Sensor fusion</span><span class="tag">SBUS</span><span class="tag">Flight control</span></div>
+        </div>
+        <div class="project-img" data-slot="4">
+          <img data-project-img="4" src="" alt="" style="display:none">
+          <div class="img-placeholder">ADD PROJECT IMAGE</div>
+          <div class="img-hint">Upload image</div>
+        </div>
+      </div>
+
+      <div class="project project-odd" id="pe-01">
+        <div class="project-text">
+          <p class="pn">PE-01 &nbsp;·&nbsp; <span class="st">PLANNED</span></p>
+          <h3>1–3 kW motor dynamometer</h3>
+          <p class="project-ctx">Independent build · own inverter and FOC</p>
+          <p>Two machines on a common shaft, one motoring and one loading. The inverter is mine down to the gate drivers and current sensing, with field-oriented control on an STM32. Output: real torque-speed curves and efficiency maps, not vendor specs.</p>
+          <div class="tags"><span class="tag">Power electronics</span><span class="tag">FOC</span><span class="tag">STM32</span><span class="tag">PCB design</span></div>
+        </div>
+        <div class="project-img" data-slot="5">
+          <img data-project-img="5" src="" alt="" style="display:none">
+          <div class="img-placeholder">ADD PROJECT IMAGE</div>
+          <div class="img-hint">Upload image</div>
+        </div>
+      </div>
+
+      <div class="project project-even" id="sw-01">
+        <div class="project-text">
+          <p class="pn">SW-01 &nbsp;·&nbsp; <span class="st">COMPLETE</span></p>
+          <h3>3D projectile motion simulator</h3>
+          <p class="project-ctx">EC-327, Boston University · C++ / raylib</p>
+          <p>I owned the physics engine, camera system, cannon, and wind and debris systems. Real-time integration with drag and a crosswind field, rendered live. Written with Eric and Sid.</p>
+          <div class="tags"><span class="tag">C++</span><span class="tag">raylib</span><span class="tag">Numerical integration</span><span class="tag">Real-time rendering</span></div>
+        </div>
+        <div class="project-img" data-slot="6">
+          <img data-project-img="6" src="" alt="" style="display:none">
+          <div class="img-placeholder">ADD PROJECT IMAGE</div>
+          <div class="img-hint">Upload image</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- CAPABILITIES -->
+  <section id="capabilities">
+    <div class="section-head">
+      <h2>Capabilities</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="caps">
+      <div class="cap">
+        <h4>Fabrication</h4>
+        <ul><li>Manual + CNC machining</li><li>Wire EDM</li><li>Investment casting</li><li>3D printing</li><li>BU EPIC access</li></ul>
+      </div>
+      <div class="cap">
+        <h4>Design</h4>
+        <ul><li>SolidWorks</li><li>Mechanism design</li><li>Reducer design</li><li>Design for manufacture</li><li>Turbomachinery sizing</li></ul>
+      </div>
+      <div class="cap">
+        <h4>Embedded &amp; control</h4>
+        <ul><li>C++, Python</li><li>I²C, SPI, UART, SBUS</li><li>IMU sensor fusion</li><li>Closed-loop motor control</li><li>Jetson, STM32</li></ul>
+      </div>
+      <div class="cap">
+        <h4>Test &amp; measurement</h4>
+        <ul><li>RASTIC motion capture</li><li>Backlash &amp; TE measurement</li><li>Torque-speed characterisation</li><li>Oscilloscope, logic analyser</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-head">
+      <h2>Contact</h2>
+      <div class="section-rule"></div>
+    </div>
+    <p>Looking for robotics, actuator, propulsion, and embedded roles — internship or full-time.</p>
+    <div class="cta">
+      <a class="btn" href="#" data-todo="email">Email me</a>
+      <a class="btn btn-ghost" href="#" data-todo="github">GitHub ↗</a>
+      <a class="btn btn-ghost" href="#" data-todo="linkedin">LinkedIn ↗</a>
+    </div>
+  </section>
+
+</div><!-- /.wrap -->
+
+<footer>
+  <div class="wrap">
+    <div class="footer-in">
+      <span>Tareq Y. · Robotics &amp; Autonomous Systems · Boston University</span>
+      <span>2026</span>
+    </div>
+
+    <div class="signin" id="signin">
+      <button class="signin-toggle" type="button" id="signin-toggle" aria-expanded="false">SIGN IN TO EDIT</button>
+      <div class="signin-form">
+        <input id="signin-user" type="text" placeholder="username" autocomplete="off" aria-label="Username">
+        <input id="signin-pass" type="password" placeholder="password" autocomplete="off" aria-label="Password">
+        <button class="btn" type="button" id="signin-go" style="padding:8px 16px">Unlock</button>
+        <span class="signin-msg" id="signin-msg" role="status"></span>
+      </div>
     </div>
   </div>
 </footer>
 
-</div><!-- /.layer -->
-
-<div class="bar" data-edit-ui role="toolbar" aria-label="Edit mode">
-  <span class="bar__note">EDIT MODE</span>
-  <button type="button" class="primary" id="edit-export">Download index.html</button>
+<div class="bar" data-edit-ui role="toolbar">
+  <span class="bar-note">EDIT MODE</span>
+  <button class="primary" type="button" id="edit-export">Download index.html</button>
   <button type="button" id="edit-exit">Exit</button>
 </div>
 
+<input type="file" id="img-picker" accept="image/*" style="display:none">
+
 <script>
-var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var USER = 'tareq', PASS = 'balls';
 
-/* ==================================================================
-   LAYER 1 — COPPER. A routed trace network behind the page, with
-   light packets travelling the copper and brightness lifting near
-   the cursor.
-   ================================================================== */
-(function () {
-  var cv = document.getElementById('copper'), ctx = cv.getContext('2d');
-  var W = 0, H = 0, DPR = 1;
-  var traces = [], pulses = [], pads = [];
-  var mx = -9999, my = -9999, tmx = -9999, tmy = -9999;
-  var GLOW_R = 250;
-
-  function rnd(a, b) { return a + Math.random() * (b - a); }
-
-  function build() {
-    traces = []; pads = []; pulses = [];
-    var count = Math.round((W * H) / 26000);
-    count = Math.max(18, Math.min(64, count));
-
-    for (var i = 0; i < count; i++) {
-      var x = Math.random() < .5 ? rnd(-40, W + 40) : (Math.random() < .5 ? -30 : W + 30);
-      var y = rnd(-40, H + 40);
-      var pts = [[x, y]];
-      var dirs = [[1, 0], [-1, 0], [0, 1], [0, -1], [.7071, .7071], [-.7071, .7071], [.7071, -.7071], [-.7071, -.7071]];
-      var d = dirs[(Math.random() * dirs.length) | 0];
-      var segs = 3 + ((Math.random() * 4) | 0);
-      var total = 0;
-      for (var s = 0; s < segs; s++) {
-        var L = rnd(48, 210);
-        x += d[0] * L; y += d[1] * L;
-        pts.push([x, y]);
-        total += L;
-        /* turn 45 or 90 degrees, the way an autorouter would */
-        var nd = dirs[(Math.random() * dirs.length) | 0];
-        if (nd[0] === -d[0] && nd[1] === -d[1]) { nd = dirs[(Math.random() * dirs.length) | 0]; }
-        d = nd;
-      }
-      var roll = Math.random();
-      var col = roll < .17 ? 'gold' : (roll < .27 ? 'maroon' : 'green');
-      traces.push({ pts: pts, len: total, col: col, w: col === 'gold' ? 1.5 : 1.1 });
-      if (Math.random() < .55) { pads.push({ x: pts[pts.length - 1][0], y: pts[pts.length - 1][1], r: rnd(2.6, 4.6) }); }
-    }
-
-    if (REDUCED) return;
-    var np = Math.max(6, Math.min(20, Math.round(count * .34)));
-    for (var p = 0; p < np; p++) {
-      pulses.push({ t: (Math.random() * traces.length) | 0, d: Math.random(), v: rnd(.045, .13) });
-    }
-  }
-
-  function resize() {
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth; H = window.innerHeight;
-    cv.width = W * DPR; cv.height = H * DPR;
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    build();
-  }
-
-  /* Point at distance d along a polyline, plus a short tail for the packet. */
-  function along(tr, dist) {
-    var pts = tr.pts, acc = 0;
-    for (var i = 1; i < pts.length; i++) {
-      var dx = pts[i][0] - pts[i - 1][0], dy = pts[i][1] - pts[i - 1][1];
-      var L = Math.hypot(dx, dy);
-      if (acc + L >= dist) {
-        var f = (dist - acc) / L;
-        return [pts[i - 1][0] + dx * f, pts[i - 1][1] + dy * f];
-      }
-      acc += L;
-    }
-    return pts[pts.length - 1];
-  }
-
-  var COL = {
-    green: [63, 217, 141], gold: [227, 178, 76], maroon: [176, 67, 90]
-  };
-
-  function frame() {
-    mx += (tmx - mx) * .12; my += (tmy - my) * .12;
-    ctx.clearRect(0, 0, W, H);
-
-    for (var i = 0; i < traces.length; i++) {
-      var tr = traces[i], pts = tr.pts, c = COL[tr.col];
-      for (var j = 1; j < pts.length; j++) {
-        var ax = pts[j - 1][0], ay = pts[j - 1][1], bx = pts[j][0], by = pts[j][1];
-        var cxm = (ax + bx) / 2, cym = (ay + by) / 2;
-        var dist = Math.hypot(cxm - mx, cym - my);
-        var boost = dist < GLOW_R ? Math.pow(1 - dist / GLOW_R, 2.1) : 0;
-        var a = (tr.col === 'green' ? .085 : .07) + boost * .62;
-        ctx.strokeStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a.toFixed(3) + ')';
-        ctx.lineWidth = tr.w + boost * 1.1;
-        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
-      }
-    }
-
-    for (var q = 0; q < pads.length; q++) {
-      var pd = pads[q];
-      var pdist = Math.hypot(pd.x - mx, pd.y - my);
-      var pb = pdist < GLOW_R ? Math.pow(1 - pdist / GLOW_R, 2) : 0;
-      ctx.strokeStyle = 'rgba(227,178,76,' + (.10 + pb * .55).toFixed(3) + ')';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.arc(pd.x, pd.y, pd.r, 0, 6.2832); ctx.stroke();
-    }
-
-    for (var k = 0; k < pulses.length; k++) {
-      var pu = pulses[k], t = traces[pu.t];
-      if (!t) { pu.t = (Math.random() * traces.length) | 0; continue; }
-      pu.d += pu.v / t.len * 60;
-      if (pu.d > 1.12) { pu.d = -.12; pu.t = (Math.random() * traces.length) | 0; pu.v = 0.045 + Math.random() * .085; continue; }
-      var dd = pu.d * t.len;
-      if (dd < 0) continue;
-      var head = along(t, Math.min(dd, t.len));
-      var tail = along(t, Math.max(0, dd - 66));
-      var c2 = COL[t.col];
-      var g = ctx.createLinearGradient(tail[0], tail[1], head[0], head[1]);
-      g.addColorStop(0, 'rgba(' + c2[0] + ',' + c2[1] + ',' + c2[2] + ',0)');
-      g.addColorStop(1, 'rgba(' + c2[0] + ',' + c2[1] + ',' + c2[2] + ',0.85)');
-      ctx.strokeStyle = g; ctx.lineWidth = t.w + 1.1; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(tail[0], tail[1]); ctx.lineTo(head[0], head[1]); ctx.stroke();
-      ctx.fillStyle = 'rgba(' + c2[0] + ',' + c2[1] + ',' + c2[2] + ',0.95)';
-      ctx.beginPath(); ctx.arc(head[0], head[1], t.w + .7, 0, 6.2832); ctx.fill();
-    }
-
-    raf = requestAnimationFrame(frame);
-  }
-
-  var raf = null;
-  var bloom = document.getElementById('bloom');
-  window.addEventListener('pointermove', function (e) {
-    tmx = e.clientX; tmy = e.clientY;
-    if (!REDUCED) {
-      bloom.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
-      bloom.style.opacity = '1';
-    }
-  }, { passive: true });
-  window.addEventListener('pointerleave', function () { tmx = -9999; tmy = -9999; bloom.style.opacity = '0'; });
-
-  window.addEventListener('resize', resize);
-  resize();
-  if (REDUCED) { frame(); cancelAnimationFrame(raf); ctx.clearRect(0, 0, W, H); frame(); cancelAnimationFrame(raf); }
-  else { raf = requestAnimationFrame(frame); }
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) { cancelAnimationFrame(raf); }
-    else if (!REDUCED) { raf = requestAnimationFrame(frame); }
-  });
-})();
-
-/* ==================================================================
-   LAYER 2 — HERO. Four agents running frontier-based exploration of
-   an occupancy grid they have never seen. Unknown cells stay dark;
-   lidar sweeps resolve them to free or wall; gold marks the frontier
-   between known-free and unknown, which is what the agents chase.
-   ================================================================== */
-(function () {
-  var cv = document.getElementById('sim');
-  if (!cv) return;
-  var ctx = cv.getContext('2d');
-  var COLS = 54, ROWS = 37, cell = 8, DPR = 1;
-  var UNKNOWN = 0, FREE = 1, WALL = 2;
-  var truth, known, glow, agents, frontiers = [], reachable = 1, done = 0, fade = 0, tick = 0;
-  var lastCov = -1, stall = 0;
-
-  var hudCov = document.getElementById('hud-cov');
-  var hudFr = document.getElementById('hud-front');
-
-  function idx(c, r) { return r * COLS + c; }
-
-  function genMap() {
-    truth = new Uint8Array(COLS * ROWS);
-    for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
-      truth[idx(c, r)] = (c === 0 || r === 0 || c === COLS - 1 || r === ROWS - 1) ? WALL : FREE;
-    }
-    /* rectangular obstacles */
-    var blocks = 7 + ((Math.random() * 4) | 0);
-    for (var b = 0; b < blocks; b++) {
-      var bw = 3 + ((Math.random() * 8) | 0), bh = 3 + ((Math.random() * 7) | 0);
-      var bx = 2 + ((Math.random() * (COLS - bw - 4)) | 0), by = 2 + ((Math.random() * (ROWS - bh - 4)) | 0);
-      if (bx < 9 && by > ROWS - 12) continue;              /* keep the start bay clear */
-      for (var y = by; y < by + bh; y++) for (var x = bx; x < bx + bw; x++) truth[idx(x, y)] = WALL;
-    }
-    /* partitions with doorways, so the frontier logic has something to chew on */
-    for (var p = 0; p < 2; p++) {
-      var px = 12 + ((Math.random() * (COLS - 26)) | 0);
-      var door = 3 + ((Math.random() * (ROWS - 10)) | 0);
-      for (var yy = 1; yy < ROWS - 1; yy++) {
-        if (yy >= door && yy < door + 5) continue;
-        truth[idx(px, yy)] = WALL;
-      }
-    }
-    for (var cy = ROWS - 8; cy < ROWS - 2; cy++) for (var cx = 2; cx < 9; cx++) truth[idx(cx, cy)] = FREE;
-
-    /* flood fill from the start bay: only reachable floor counts toward coverage */
-    known = new Uint8Array(COLS * ROWS);
-    glow = new Float32Array(COLS * ROWS);
-    var seen = new Uint8Array(COLS * ROWS), stack = [idx(4, ROWS - 5)];
-    seen[stack[0]] = 1; reachable = 0;
-    while (stack.length) {
-      var i = stack.pop(); reachable++;
-      var c0 = i % COLS, r0 = (i / COLS) | 0;
-      var nb = [[c0 + 1, r0], [c0 - 1, r0], [c0, r0 + 1], [c0, r0 - 1]];
-      for (var n = 0; n < 4; n++) {
-        var nc = nb[n][0], nr = nb[n][1];
-        if (nc < 0 || nr < 0 || nc >= COLS || nr >= ROWS) continue;
-        var ni = idx(nc, nr);
-        if (seen[ni] || truth[ni] === WALL) continue;
-        seen[ni] = 1; stack.push(ni);
-      }
-    }
-
-    agents = [];
-    for (var a = 0; a < 4; a++) {
-      agents.push({ x: 3.5 + a * 1.2, y: ROWS - 5.5 + (a % 2), tx: null, ty: null, ti: null,
-                    px: 0, py: 0, stuck: 0, ban: {}, trail: [], hits: [] });
-    }
-    done = 0; fade = 0; tick = 0; lastCov = -1; stall = 0;
-  }
-
-  /* Cast rays, mark what they touch, and keep the endpoints for the sensor fan. */
-  function sense(a) {
-    var RAYS = 42, RANGE = 10.5;
-    a.hits.length = 0;
-    for (var k = 0; k < RAYS; k++) {
-      var ang = k / RAYS * 6.2832;
-      var dx = Math.cos(ang), dy = Math.sin(ang), d = 0;
-      while (d < RANGE) {
-        d += .34;
-        var cx = (a.x + dx * d) | 0, cy = (a.y + dy * d) | 0;
-        if (cx < 0 || cy < 0 || cx >= COLS || cy >= ROWS) break;
-        var i = idx(cx, cy);
-        if (truth[i] === WALL) { known[i] = WALL; glow[i] = 1; break; }
-        if (known[i] !== FREE) { known[i] = FREE; }
-        glow[i] = 1;
-      }
-      a.hits.push([a.x + dx * d, a.y + dy * d]);
-    }
-  }
-
-  function findFrontiers() {
-    frontiers.length = 0;
-    for (var r = 1; r < ROWS - 1; r++) for (var c = 1; c < COLS - 1; c++) {
-      var i = idx(c, r);
-      if (known[i] !== FREE) continue;
-      if (known[idx(c + 1, r)] === UNKNOWN || known[idx(c - 1, r)] === UNKNOWN ||
-          known[idx(c, r + 1)] === UNKNOWN || known[idx(c, r - 1)] === UNKNOWN) {
-        frontiers.push(i);
-      }
-    }
-  }
-
-  /* Nearest frontier, penalised where another agent is already heading,
-     and skipping any this agent has proven it cannot reach. */
-  function assign(a, self) {
-    var best = null, bestScore = 1e9;
-    for (var k = 0; k < frontiers.length; k++) {
-      var i = frontiers[k];
-      if (a.ban[i]) continue;
-      var fc = i % COLS + .5, fr = ((i / COLS) | 0) + .5;
-      var score = Math.hypot(fc - a.x, fr - a.y);
-      for (var j = 0; j < agents.length; j++) {
-        if (j === self || agents[j].tx === null) continue;
-        if (Math.hypot(agents[j].tx - fc, agents[j].ty - fr) < 7) score += 16;
-      }
-      if (score < bestScore) { bestScore = score; best = [fc, fr, i]; }
-    }
-    if (best) { a.tx = best[0]; a.ty = best[1]; a.ti = best[2]; }
-    else { a.tx = null; a.ty = null; a.ti = null; }
-  }
-
-  function walkable(x, y) {
-    var c = x | 0, r = y | 0;
-    if (c < 0 || r < 0 || c >= COLS || r >= ROWS) return false;
-    return truth[idx(c, r)] !== WALL;
-  }
-
-  function step() {
-    tick++;
-    if (tick % 12 === 0) findFrontiers();
-
-    for (var i = 0; i < agents.length; i++) {
-      var a = agents[i];
-      sense(a);
-
-      for (var bk in a.ban) { if (--a.ban[bk] <= 0) delete a.ban[bk]; }
-
-      if (a.tx === null || tick % 24 === i * 6) assign(a, i);
-      if (a.tx !== null) {
-        var dx = a.tx - a.x, dy = a.ty - a.y, L = Math.hypot(dx, dy);
-        if (L < .7) { a.tx = null; a.ty = null; }
-        else {
-          var sp = .062, nx = a.x + dx / L * sp, ny = a.y + dy / L * sp;
-          if (walkable(nx, ny)) { a.x = nx; a.y = ny; }
-          else if (walkable(nx, a.y)) { a.x = nx; }        /* slide along the wall */
-          else if (walkable(a.x, ny)) { a.y = ny; }
-          else { a.tx = null; a.ty = null; }
-        }
-      }
-
-      /* If an agent stops making progress, the frontier it wants is
-         behind a wall it cannot route around. Blacklist it and move on,
-         rather than grinding against the corner. */
-      if (Math.hypot(a.x - a.px, a.y - a.py) < .02) { a.stuck++; } else { a.stuck = 0; }
-      a.px = a.x; a.py = a.y;
-      if (a.stuck > 70) {
-        if (a.ti !== null) a.ban[a.ti] = 600;
-        a.tx = null; a.ty = null; a.ti = null; a.stuck = 0;
-      }
-
-      a.trail.push([a.x, a.y]);
-      if (a.trail.length > 190) a.trail.shift();
-    }
-
-    var cov = 0;
-    for (var g = 0; g < known.length; g++) { if (known[g] === FREE) cov++; if (glow[g] > 0) glow[g] -= .012; }
-    if (cov > lastCov) { lastCov = cov; stall = 0; } else { stall++; }
-    var pct = Math.min(100, Math.round(cov / Math.max(1, reachable) * 100));
-    if (hudCov) hudCov.textContent = pct + '%';
-    if (hudFr) hudFr.textContent = String(frontiers.length);
-    if ((frontiers.length === 0 && tick > 90) || stall > 420 || tick > 2400) done = 1;
-  }
-
-  function draw() {
-    var W = COLS * cell, H = ROWS * cell;
-    ctx.clearRect(0, 0, W, H);
-
-    for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
-      var i = idx(c, r), k = known[i];
-      if (k === UNKNOWN) continue;
-      var gl = Math.max(0, glow[i]);
-      if (k === FREE) {
-        ctx.fillStyle = 'rgba(63,217,141,' + (.055 + gl * .16).toFixed(3) + ')';
-        ctx.fillRect(c * cell, r * cell, cell - .8, cell - .8);
-      } else {
-        ctx.fillStyle = 'rgba(227,178,76,' + (.30 + gl * .40).toFixed(3) + ')';
-        ctx.fillRect(c * cell + .8, r * cell + .8, cell - 2.2, cell - 2.2);
-      }
-    }
-
-    var puls = .5 + .5 * Math.sin(tick * .09);
-    ctx.fillStyle = 'rgba(227,178,76,' + (.30 + puls * .45).toFixed(3) + ')';
-    for (var f = 0; f < frontiers.length; f++) {
-      var fi = frontiers[f];
-      ctx.fillRect((fi % COLS) * cell + cell / 2 - 1.2, (((fi / COLS) | 0)) * cell + cell / 2 - 1.2, 2.4, 2.4);
-    }
-
-    for (var a = 0; a < agents.length; a++) {
-      var ag = agents[a];
-
-      ctx.beginPath();
-      ctx.moveTo(ag.x * cell, ag.y * cell);
-      for (var h = 0; h < ag.hits.length; h++) ctx.lineTo(ag.hits[h][0] * cell, ag.hits[h][1] * cell);
-      ctx.closePath();
-      ctx.fillStyle = 'rgba(63,217,141,0.045)';
-      ctx.fill();
-
-      ctx.beginPath();
-      for (var t = 0; t < ag.trail.length; t++) {
-        var p = ag.trail[t];
-        if (t === 0) ctx.moveTo(p[0] * cell, p[1] * cell); else ctx.lineTo(p[0] * cell, p[1] * cell);
-      }
-      ctx.strokeStyle = 'rgba(63,217,141,0.24)'; ctx.lineWidth = 1; ctx.stroke();
-
-      if (ag.tx !== null) {
-        ctx.setLineDash([2, 4]);
-        ctx.strokeStyle = 'rgba(227,178,76,0.24)';
-        ctx.beginPath(); ctx.moveTo(ag.x * cell, ag.y * cell); ctx.lineTo(ag.tx * cell, ag.ty * cell); ctx.stroke();
-        ctx.setLineDash([]);
-      }
-
-      var gx = ctx.createRadialGradient(ag.x * cell, ag.y * cell, 0, ag.x * cell, ag.y * cell, 13);
-      gx.addColorStop(0, 'rgba(63,217,141,0.55)');
-      gx.addColorStop(1, 'rgba(63,217,141,0)');
-      ctx.fillStyle = gx;
-      ctx.beginPath(); ctx.arc(ag.x * cell, ag.y * cell, 13, 0, 6.2832); ctx.fill();
-      ctx.fillStyle = '#EFFFF6';
-      ctx.beginPath(); ctx.arc(ag.x * cell, ag.y * cell, 2.5, 0, 6.2832); ctx.fill();
-    }
-
-    if (fade > 0) {
-      ctx.fillStyle = 'rgba(6,11,8,' + Math.min(1, fade).toFixed(3) + ')';
-      ctx.fillRect(0, 0, W, H);
-    }
-  }
-
-  function resize() {
-    var box = cv.parentNode.getBoundingClientRect();
-    cell = Math.max(5, box.width / COLS);
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
-    cv.width = COLS * cell * DPR;
-    cv.height = ROWS * cell * DPR;
-    cv.style.height = (ROWS * cell) + 'px';
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    draw();
-  }
-
-  var running = true, rafId = null;
-  function loop() {
-    if (!done) { step(); }
-    else {
-      fade += .012;
-      if (fade > 1.25) { genMap(); }
-    }
-    draw();
-    rafId = requestAnimationFrame(loop);
-  }
-
-  genMap();
-  window.addEventListener('resize', resize);
-  resize();
-
-  if (REDUCED) {
-    /* Settle on a finished map rather than animating. */
-    for (var w = 0; w < 2600 && !done; w++) step();
-    draw();
-  } else {
-    rafId = requestAnimationFrame(loop);
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) { cancelAnimationFrame(rafId); running = false; }
-      else if (!running) { running = true; rafId = requestAnimationFrame(loop); }
-    });
-  }
-})();
-
-/* ==================================================================
-   SIGN IN + EDIT MODE
-   The credentials below sit in a public file. Anyone can read them
-   with View Source, so treat this as a convenience lock — it stops a
-   stray visitor nudging your copy and nothing more. Never reuse this
-   password anywhere that matters.
-   ================================================================== */
-var USER = 'tareq';
-var PASS = 'balls';
-
-var EDITABLE = [
-  '.hero h1', '.hero__lede', '.hero__meta', '.hero__cap',
-  '.dim h2', '.dim__tag', '.idx caption',
-  '.idx__title a', '.idx__disc', '.idx td:first-child', '.st',
-  '.sheet h3', '.sheet__ctx', '.sheet p', '.sheet__pn',
-  '.spec th', '.spec td', '.tag',
-  '.fig__slot', '.fig figcaption',
-  '.col h4', '.col li',
-  '.about p', '.contact p',
-  '.btn', '.tblock dd', '.nav__mark'
-].join(', ');
-
-document.querySelectorAll('[data-todo]').forEach(function (el) {
-  el.classList.add('is-todo');
-  el.title = 'TODO: add ' + el.dataset.todo;
-});
-
-var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
-var navTargets = navLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
-var navObs = new IntersectionObserver(function (entries) {
-  entries.forEach(function (entry) {
+/* ── nav active state ── */
+var navLinks = [].slice.call(document.querySelectorAll('nav a[href^="#"]'));
+var navTargets = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+var navObs = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
     if (!entry.isIntersecting) return;
     var i = navTargets.indexOf(entry.target);
-    navLinks.forEach(function (a, j) { a.classList.toggle('is-active', j === i); });
+    navLinks.forEach(function(a,j){ a.classList.toggle('active', j===i); });
   });
-}, { rootMargin: '-45% 0px -50% 0px' });
-navTargets.forEach(function (t) { if (t) navObs.observe(t); });
+}, { rootMargin: '-40% 0px -55% 0px' });
+navTargets.forEach(function(t){ if(t) navObs.observe(t); });
 
+/* ── todo links ── */
+document.querySelectorAll('[data-todo]').forEach(function(el){
+  el.addEventListener('click', function(e){ e.preventDefault(); });
+  el.style.opacity = '.45';
+  el.title = 'Add link: ' + el.dataset.todo;
+});
+
+/* ── sign in ── */
 var signin = document.getElementById('signin');
-var msg = document.getElementById('signin-msg');
+var msg    = document.getElementById('signin-msg');
 var userEl = document.getElementById('signin-user');
 var passEl = document.getElementById('signin-pass');
 var toggle = document.getElementById('signin-toggle');
 
-toggle.addEventListener('click', function () {
+toggle.addEventListener('click', function(){
   var open = signin.getAttribute('data-open') === '1';
-  if (open) { signin.removeAttribute('data-open'); } else { signin.setAttribute('data-open', '1'); }
+  signin.toggleAttribute('data-open', !open);
+  if (open) signin.removeAttribute('data-open'); else signin.setAttribute('data-open','1');
   toggle.setAttribute('aria-expanded', String(!open));
-  if (!open) { userEl.focus(); }
+  if (!open) userEl.focus();
 });
 
-function attempt() {
-  if (userEl.value.trim().toLowerCase() === USER && passEl.value === PASS) {
-    userEl.value = ''; passEl.value = ''; msg.textContent = '';
+function attempt(){
+  if (userEl.value.trim().toLowerCase()===USER && passEl.value===PASS){
+    userEl.value=''; passEl.value=''; msg.textContent='';
     signin.removeAttribute('data-open');
-    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-expanded','false');
     enterEdit();
   } else {
-    msg.textContent = 'Wrong username or password.';
-    passEl.value = ''; passEl.focus();
+    msg.textContent='Wrong credentials.';
+    passEl.value=''; passEl.focus();
   }
 }
 document.getElementById('signin-go').addEventListener('click', attempt);
-[userEl, passEl].forEach(function (el) {
-  el.addEventListener('keydown', function (e) { if (e.key === 'Enter') attempt(); });
+[userEl,passEl].forEach(function(el){
+  el.addEventListener('keydown', function(e){ if(e.key==='Enter') attempt(); });
 });
 
-function blockNav(e) { e.preventDefault(); }
+/* ── editable selectors ── */
+var EDITABLE = [
+  'nav .nav-mark', '.hero h1', '.hero-lede', '.hero-meta',
+  '.section-head h2', '.section-label',
+  '.pn', '.project h3', '.project-ctx', '.project p', '.st',
+  '.tag', '.cap h4', '.cap li',
+  '.about-grid p', '.stat-val',
+  '.contact p', '.btn', '.footer-in span'
+].join(', ');
 
-function enterEdit() {
+function blockNav(e){ e.preventDefault(); }
+
+function enterEdit(){
   document.body.classList.add('is-editing');
-  document.querySelectorAll(EDITABLE).forEach(function (el) {
-    el.setAttribute('contenteditable', 'true');
-    el.setAttribute('spellcheck', 'true');
-    if (el.tagName === 'A') { el.addEventListener('click', blockNav); }
+  document.querySelectorAll(EDITABLE).forEach(function(el){
+    el.setAttribute('contenteditable','true');
+    el.setAttribute('spellcheck','true');
+    if (el.tagName==='A') el.addEventListener('click', blockNav);
   });
-  document.querySelector('.bar button').focus();
+  document.querySelector('.bar .primary').focus();
 }
 
-function exitEdit() {
+function exitEdit(){
   document.body.classList.remove('is-editing');
-  document.querySelectorAll('[contenteditable="true"]').forEach(function (el) {
+  document.querySelectorAll('[contenteditable]').forEach(function(el){
     el.removeAttribute('contenteditable');
     el.removeAttribute('spellcheck');
-    if (el.tagName === 'A') { el.removeEventListener('click', blockNav); }
+    if (el.tagName==='A') el.removeEventListener('click', blockNav);
   });
 }
 document.getElementById('edit-exit').addEventListener('click', exitEdit);
 
-document.addEventListener('paste', function (e) {
+document.addEventListener('paste', function(e){
   if (!document.body.classList.contains('is-editing')) return;
   var t = e.target;
-  if (!t.closest || !t.closest('[contenteditable="true"]')) return;
+  if (!t.closest || !t.closest('[contenteditable]')) return;
   e.preventDefault();
-  document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text'));
+  document.execCommand('insertText', false, (e.clipboardData||window.clipboardData).getData('text'));
 });
 
-document.getElementById('edit-export').addEventListener('click', function () {
-  var clone = document.documentElement.cloneNode(true);
+/* ── image upload ── */
+var picker  = document.getElementById('img-picker');
+var pending = null; /* { img: <img>, ph: <div> } */
 
-  clone.querySelectorAll('[data-edit-ui]').forEach(function (el) { el.remove(); });
-  clone.querySelectorAll('[contenteditable]').forEach(function (el) {
+function activateSlot(imgEl, phEl){
+  if (!document.body.classList.contains('is-editing')) return;
+  pending = { img: imgEl, ph: phEl };
+  picker.value = '';
+  picker.click();
+}
+
+/* headshot */
+document.getElementById('headshot-click').addEventListener('click', function(){
+  activateSlot(document.getElementById('headshot-img'), document.getElementById('headshot-ph'));
+});
+
+/* project slots */
+document.querySelectorAll('.project-img').forEach(function(wrap){
+  wrap.addEventListener('click', function(){
+    var img = wrap.querySelector('img[data-project-img]');
+    var ph  = wrap.querySelector('.img-placeholder');
+    activateSlot(img, ph);
+  });
+});
+
+picker.addEventListener('change', function(){
+  if (!picker.files || !picker.files[0] || !pending) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    pending.img.src = e.target.result;
+    pending.img.style.display = 'block';
+    if (pending.ph) pending.ph.style.display = 'none';
+    pending = null;
+  };
+  reader.readAsDataURL(picker.files[0]);
+});
+
+/* ── export ── */
+document.getElementById('edit-export').addEventListener('click', function(){
+  var clone = document.documentElement.cloneNode(true);
+  clone.querySelectorAll('[data-edit-ui]').forEach(function(el){ el.remove(); });
+  clone.querySelectorAll('[contenteditable]').forEach(function(el){
     el.removeAttribute('contenteditable'); el.removeAttribute('spellcheck');
   });
-  clone.querySelectorAll('.is-active').forEach(function (el) { el.classList.remove('is-active'); });
-  clone.querySelectorAll('.is-todo').forEach(function (el) { el.classList.remove('is-todo'); el.removeAttribute('title'); });
-  clone.querySelectorAll('input').forEach(function (el) { el.removeAttribute('value'); });
-  clone.querySelectorAll('canvas').forEach(function (el) {
-    el.removeAttribute('width'); el.removeAttribute('height'); el.removeAttribute('style');
-  });
-  var cbl = clone.querySelector('#bloom'); if (cbl) cbl.removeAttribute('style');
-  var cs = clone.querySelector('#signin'); if (cs) cs.removeAttribute('data-open');
-  var ct = clone.querySelector('#signin-toggle'); if (ct) ct.setAttribute('aria-expanded', 'false');
-  var cm = clone.querySelector('#signin-msg'); if (cm) cm.textContent = '';
-  var cb = clone.querySelector('body'); if (cb) cb.classList.remove('is-editing');
-
+  clone.querySelectorAll('.active').forEach(function(el){ el.classList.remove('active'); });
+  clone.querySelectorAll('input:not([type=file])').forEach(function(el){ el.value=''; });
+  var cs=clone.querySelector('#signin'); if(cs) cs.removeAttribute('data-open');
+  var ct=clone.querySelector('#signin-toggle'); if(ct) ct.setAttribute('aria-expanded','false');
+  var cm=clone.querySelector('#signin-msg'); if(cm) cm.textContent='';
+  var cb=clone.querySelector('body'); if(cb) cb.classList.remove('is-editing');
+  /* re-attach the toolbar so it's there next time */
   var bar = document.querySelector('.bar');
-  if (bar && cb) {
-    var freshBar = bar.cloneNode(true);
-    freshBar.querySelectorAll('[contenteditable]').forEach(function (el) { el.removeAttribute('contenteditable'); });
-    cb.appendChild(freshBar);
-  }
-
-  var html = '<!DOCTYPE html>\n' + clone.outerHTML;
-  var url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-  var a = document.createElement('a');
-  a.href = url; a.download = 'index.html';
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
+  if (bar && cb){ var fb=bar.cloneNode(true); fb.querySelectorAll('[contenteditable]').forEach(function(el){el.removeAttribute('contenteditable');}); cb.appendChild(fb); }
+  var picker2=clone.querySelector('#img-picker'); if(picker2) picker2.remove();
+  /* inject a fresh picker into the export */
+  var sc=clone.querySelector('body'); if(sc){ var np=document.createElement('input'); np.type='file'; np.id='img-picker'; np.accept='image/*'; np.style.display='none'; sc.appendChild(np); }
+  var html='<!DOCTYPE html>\n'+clone.outerHTML;
+  var url=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+  var a=document.createElement('a'); a.href=url; a.download='index.html';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 });
 </script>
 </body>
