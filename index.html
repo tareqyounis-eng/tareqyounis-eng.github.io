@@ -205,12 +205,33 @@ footer { border-top: 1px solid var(--rule); padding: 28px 0; }
 .footer-in { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px; letter-spacing: .06em; color: var(--ink-soft); }
 
 /* ── sign-in ── */
-.signin { margin-top: 20px; }
-.signin-toggle { font-size: 11px; letter-spacing: .1em; color: var(--ink-soft); background: none; border: none; padding: 0; cursor: pointer; font-family: var(--sans); }
+.signin { margin-top: 24px; }
+.signin-toggle {
+  font-size: 11px; letter-spacing: .1em; color: var(--ink-soft);
+  background: none; border: none; padding: 0; cursor: pointer;
+  font-family: var(--sans); text-decoration: underline; text-underline-offset: 3px;
+}
 .signin-toggle:hover { color: var(--ink); }
-.signin-form { display: none; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
-.signin input { font-family: var(--sans); font-size: 13px; color: var(--ink); background: var(--cream); border: 1px solid var(--rule); padding: 8px 10px; width: 140px; }
-.signin input:focus { outline: 1px solid var(--ink); }
+.signin-form {
+  display: none; flex-direction: column; gap: 10px; margin-top: 16px;
+  background: var(--ink); padding: 20px; max-width: 320px;
+}
+.signin-form label { font-size: 11px; letter-spacing: .1em; color: #ccc; font-family: var(--sans); }
+.signin-form input {
+  font-family: var(--sans); font-size: 14px; color: #fff;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.3);
+  padding: 10px 12px; width: 100%; display: block;
+}
+.signin-form input::placeholder { color: rgba(255,255,255,.4); }
+.signin-form input:focus { outline: 1px solid #fff; background: rgba(255,255,255,.15); }
+.signin-btn-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.signin-form .unlock-btn {
+  font-family: var(--sans); font-size: 13px; letter-spacing: .04em;
+  background: #fff; color: var(--ink); border: none;
+  padding: 10px 20px; cursor: pointer; font-weight: 500;
+}
+.signin-form .unlock-btn:hover { background: var(--cream-d); }
+.signin-msg { font-size: 12px; color: #f88; font-family: var(--sans); }
 .signin-msg { font-size: 12px; color: #8B3A3A; }
 
 /* ── edit bar ── */
@@ -437,10 +458,18 @@ body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); 
     <div class="signin" id="signin">
       <button class="signin-toggle" type="button" id="signin-toggle" aria-expanded="false">SIGN IN TO EDIT</button>
       <div class="signin-form" id="signin-form">
-        <input id="signin-user" type="text" placeholder="username" autocomplete="off" aria-label="Username">
-        <input id="signin-pass" type="password" placeholder="password" autocomplete="off" aria-label="Password">
-        <button class="btn" type="button" id="signin-go" style="padding:8px 16px">Unlock</button>
-        <span class="signin-msg" id="signin-msg" role="status"></span>
+        <div>
+          <label for="signin-user">USERNAME</label>
+          <input id="signin-user" type="text" placeholder="username" autocomplete="off">
+        </div>
+        <div>
+          <label for="signin-pass">PASSWORD</label>
+          <input id="signin-pass" type="password" placeholder="password" autocomplete="off">
+        </div>
+        <div class="signin-btn-row">
+          <button class="unlock-btn" type="button" id="signin-go">Unlock</button>
+          <span class="signin-msg" id="signin-msg" role="status"></span>
+        </div>
       </div>
     </div>
   </div>
