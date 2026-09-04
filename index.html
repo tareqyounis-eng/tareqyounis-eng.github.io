@@ -2,641 +2,804 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tareq — Robotics & Autonomous Systems</title>
-<meta name="description" content="Robotics and autonomous systems engineer. Mechanism design, embedded control, turbomachinery.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500&family=Inter+Tight:wght@500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tareq Younis</title>
+<meta name="description" content="Tareq Younis — robotics engineer.">
 <style>
-:root {
-  --cream:   #F7F3EE;
-  --cream-d: #EDE8E1;
-  --ink:     #1A1814;
-  --ink-mid: #5C574F;
-  --ink-soft:#9B9590;
-  --rule:    rgba(26,24,20,.12);
-  --accent:  #2D2926;
-  --sans: "DM Sans", system-ui, sans-serif;
-  --serif: "Inter Tight", "DM Sans", system-ui, sans-serif;
-  --max: 900px;
-  --gutter: clamp(22px, 5vw, 64px);
-}
+  :root{
+    --bg:#FAF7F0;
+    --surface:#F2EDE3;
+    --ink:#1E1C19;
+    --ink-2:#48443D;
+    --muted:#8C857A;
+    --rule:#E3DDD0;
+    --focus:#C7B99A;
+    --maxw:1040px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink-2);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:"kern" 1;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+  h1,h2,h3,h4{color:var(--ink);font-weight:520;margin:0;line-height:1.25;letter-spacing:-0.015em}
+  h1{font-size:clamp(30px,4.2vw,42px);letter-spacing:-0.025em}
+  h3{font-size:20px}
+  h4{font-size:16.5px}
+  p{margin:0 0 14px}
+  p:last-child{margin-bottom:0}
+  a{color:var(--ink);text-decoration:none}
 
-*, *::before, *::after { box-sizing: border-box; }
-html { background: var(--cream); }
-body {
-  margin: 0;
-  background: var(--cream);
-  color: var(--ink);
-  font-family: var(--sans);
-  font-size: clamp(15px, .35vw + 14px, 17px);
-  font-weight: 300;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-}
-::selection { background: var(--ink); color: var(--cream); }
-a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
-a:hover { text-decoration-color: var(--ink); }
-:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .eyebrow{
+    font-size:11px;letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--muted);font-weight:560;margin:0 0 26px;
+  }
 
-/* ── layout ── */
-.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
-hr { border: none; border-top: 1px solid var(--rule); margin: 0; }
+  /* ---------- hero ---------- */
+  .hero{
+    display:grid;grid-template-columns:1fr 172px;gap:56px;align-items:start;
+    padding:96px 0 64px;
+  }
+  .hero .role{font-size:17px;color:var(--ink);margin:10px 0 0;font-weight:450}
+  .hero .tagline{margin:18px 0 0;max-width:56ch;color:var(--ink-2)}
+  .hero .links{margin-top:28px}
 
-/* ── nav ── */
-nav {
-  position: sticky; top: 0; z-index: 40;
-  background: rgba(247,243,238,.92);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--rule);
-}
-.nav-in {
-  max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter);
-  display: flex; align-items: baseline; gap: 32px;
-  height: 52px;
-}
-.nav-mark { font-family: var(--serif); font-size: 15px; font-weight: 600; letter-spacing: -.02em; margin-right: auto; text-decoration: none; }
-nav a { font-size: 13.5px; font-weight: 400; color: var(--ink-mid); text-decoration: none; letter-spacing: .02em; }
-nav a:hover, nav a.active { color: var(--ink); }
-@media (max-width: 560px) { .nav-in { gap: 18px; } nav a.hide-sm { display: none; } }
+  /* ---------- sections ---------- */
+  section{padding:56px 0;border-top:1px solid var(--rule)}
+  .prose{max-width:68ch}
 
-/* ── hero ── */
-.hero { padding: clamp(56px, 9vw, 100px) 0 clamp(40px, 6vw, 72px); }
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: clamp(32px, 5vw, 72px);
-  align-items: start;
-}
-@media (max-width: 640px) { .hero-grid { grid-template-columns: 1fr; } }
+  /* education / experience style entries */
+  .entries{list-style:none;margin:0;padding:0}
+  .entry{padding:0 0 20px;margin:0 0 20px;border-bottom:1px solid var(--rule);position:relative}
+  .entry:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+  .entry-head{display:flex;justify-content:space-between;gap:24px;align-items:baseline;flex-wrap:wrap}
+  .entry-title{color:var(--ink);font-weight:520;font-size:16.5px}
+  .entry-meta{color:var(--muted);font-size:13.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .entry-sub{font-size:15px;margin-top:3px}
 
-.hero h1 {
-  font-family: var(--serif);
-  font-size: clamp(38px, 6.5vw, 68px);
-  line-height: 1.08;
-  font-weight: 600;
-  margin: 0 0 20px;
-  letter-spacing: -.03em;
-}
-.hero h1 em { font-style: normal; font-weight: 500; color: var(--ink-mid); }
-.hero-lede { font-size: clamp(16px, .6vw + 14px, 19px); max-width: 38ch; color: var(--ink-mid); margin: 0 0 28px; font-weight: 300; }
-.hero-meta { font-size: 12.5px; letter-spacing: .08em; color: var(--ink-soft); line-height: 2; margin: 0 0 32px; }
-.cta { display: flex; gap: 12px; flex-wrap: wrap; }
-.btn {
-  font-family: var(--sans); font-size: 13.5px; font-weight: 400; letter-spacing: .04em;
-  padding: 10px 22px; border: 1px solid var(--ink); color: var(--ink);
-  text-decoration: none; transition: background .15s, color .15s;
-  display: inline-block;
-}
-.btn:hover { background: var(--ink); color: var(--cream); }
-.btn-ghost { background: transparent; }
+  /* skills */
+  .skills{display:grid;gap:16px;max-width:680px}
+  .skill-row{display:grid;grid-template-columns:170px 1fr;gap:24px;align-items:baseline;position:relative}
+  .skill-cat{color:var(--ink);font-weight:520;font-size:14.5px}
+  .skill-val{font-size:15px}
 
-/* headshot */
-.headshot-wrap { flex: none; }
-.headshot {
-  width: clamp(110px, 18vw, 168px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1px solid var(--rule);
-  background: var(--cream-d);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  position: relative;
-}
-.headshot img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.headshot-placeholder {
-  text-align: center;
-  font-size: 11px; letter-spacing: .1em; color: var(--ink-soft);
-  padding: 12px;
-  pointer-events: none;
-  line-height: 1.6;
-}
-.headshot-hint {
-  position: absolute; inset: 0; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(26,24,20,.5);
-  font-size: 11px; letter-spacing: .08em; color: var(--cream);
-  opacity: 0; transition: opacity .2s;
-  pointer-events: none;
-}
-body.is-editing .headshot:hover .headshot-hint { opacity: 1; }
-body.is-editing .headshot { cursor: pointer; }
+  /* ---------- links / chips ---------- */
+  .links{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+  .chip{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:13.5px;line-height:1;padding:9px 15px;border-radius:999px;
+    border:1px solid var(--rule);color:var(--ink-2);background:transparent;
+    transition:border-color .15s ease,color .15s ease,background .15s ease;
+  }
+  .chip:hover{border-color:var(--ink);color:var(--ink)}
+  .chip.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+  .chip.primary:hover{background:#000;border-color:#000;color:var(--bg)}
 
-/* ── section headings ── */
-.section-head {
-  display: flex; align-items: baseline; gap: 16px;
-  padding: clamp(40px,6vw,72px) 0 clamp(24px,3vw,36px);
-}
-.section-head h2 {
-  font-family: var(--serif); font-size: clamp(22px, 2.2vw, 30px);
-  font-weight: 600; margin: 0; white-space: nowrap; letter-spacing: -.025em;
-}
-.section-rule { flex: 1; height: 1px; background: var(--rule); }
-.section-label { font-size: 11px; letter-spacing: .14em; color: var(--ink-soft); flex: none; }
+  /* ---------- major projects ---------- */
+  .project{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
+    gap:52px;align-items:start;
+    padding:44px 0;border-bottom:1px solid var(--rule);
+  }
+  .project:first-of-type{padding-top:0}
+  .project:last-of-type{border-bottom:0;padding-bottom:0}
+  .project-meta{color:var(--muted);font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin:0 0 10px;font-weight:530}
+  .project-body p{margin-top:12px;font-size:15.5px;max-width:62ch}
+  .project-body .links{margin-top:20px}
 
-/* ── about ── */
-.about-grid { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr); gap: clamp(28px,4vw,56px); padding-bottom: clamp(40px,6vw,72px); align-items: start; }
-@media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; } }
-.about-grid p { margin: 0 0 16px; }
-.about-stats { border-top: 1px solid var(--rule); }
-.stat { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--rule); font-size: 13.5px; }
-.stat-label { color: var(--ink-soft); font-size: 11.5px; letter-spacing: .06em; }
-.stat-val { font-weight: 400; text-align: right; }
+  /* ---------- minor projects ---------- */
+  .minors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px}
+  .minor{border-top:1px solid var(--rule);padding-top:18px}
+  .minor p{margin-top:9px;font-size:14.5px}
+  .minor .links{margin-top:16px}
 
-/* ── projects ── */
-.projects { padding-bottom: clamp(48px,7vw,88px); }
-.project { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(22px,4vw,52px); padding: clamp(28px,4vw,44px) 0; border-top: 1px solid var(--rule); align-items: start; }
-.project:last-child { border-bottom: 1px solid var(--rule); }
-@media (max-width: 680px) { .project { grid-template-columns: 1fr; } }
-.project-odd { }
-.project-even .project-img { order: -1; }
-@media (max-width: 680px) { .project-even .project-img { order: 0; } }
+  /* ---------- media slots ---------- */
+  .media-slot{
+    position:relative;display:block;width:100%;aspect-ratio:16/9;overflow:hidden;
+    background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+  }
+  .media-slot img,.media-slot video{display:block;width:100%;height:100%;object-fit:cover}
+  .media-slot.headshot{width:172px;aspect-ratio:1/1;border-radius:50%}
+  body:not(.editing) .media-slot:empty{display:none}
+  body:not(.editing) .hero:has(.media-slot:empty){grid-template-columns:1fr}
+  body:not(.editing) .project:has(.media-slot:empty){grid-template-columns:1fr}
+  .slot-label{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    text-align:center;padding:0 10px;pointer-events:none;
+  }
 
-.pn { font-size: 11px; letter-spacing: .14em; color: var(--ink-soft); margin-bottom: 8px; }
-.project h3 { font-family: var(--serif); font-weight: 600; font-size: clamp(18px,1.8vw,23px); margin: 0 0 6px; line-height: 1.2; letter-spacing: -.02em; }
-.project-ctx { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
-.project p { margin: 0 0 16px; font-size: 15px; }
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-.tag { font-size: 11px; letter-spacing: .04em; color: var(--ink-mid); border: 1px solid var(--rule); padding: 4px 9px; }
-.st { font-size: 10.5px; letter-spacing: .1em; padding: 3px 8px; border: 1px solid var(--rule); color: var(--ink-soft); display: inline-block; }
-.st-live { border-color: rgba(26,24,20,.35); color: var(--ink); }
-.project-status { margin: 0 0 10px; }
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--rule);margin-top:16px;
+    padding:28px 0 40px;display:flex;justify-content:space-between;
+    align-items:center;gap:20px;font-size:13px;color:var(--muted);
+  }
+  #loginBtn{
+    background:none;border:0;padding:4px 6px;margin:0;cursor:pointer;
+    font:inherit;font-size:11.5px;letter-spacing:.1em;color:var(--muted);
+    opacity:.4;transition:opacity .2s ease;
+  }
+  #loginBtn:hover,#loginBtn:focus-visible{opacity:1;outline:none;text-decoration:underline}
 
-/* project image slot */
-.project-img {
-  aspect-ratio: 4/3;
-  background: var(--cream-d);
-  border: 1px solid var(--rule);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  position: relative;
-  cursor: default;
-}
-body.is-editing .project-img { cursor: pointer; }
-.project-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.img-placeholder {
-  text-align: center; font-size: 11px; letter-spacing: .1em;
-  color: var(--ink-soft); line-height: 1.8; padding: 16px;
-  pointer-events: none;
-}
-.img-hint {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(26,24,20,.42);
-  font-size: 11.5px; letter-spacing: .08em; color: var(--cream);
-  opacity: 0; transition: opacity .2s;
-  pointer-events: none;
-}
-body.is-editing .project-img:hover .img-hint { opacity: 1; }
+  /* ================= EDIT MODE ================= */
+  body.editing{padding-top:53px}
+  [contenteditable="true"]{border-radius:2px;transition:box-shadow .12s ease}
+  [contenteditable="true"]:hover{box-shadow:0 0 0 1px var(--rule)}
+  [contenteditable="true"]:focus{box-shadow:0 0 0 2px var(--focus);background:#fff;outline:none}
 
-/* ── capabilities ── */
-.caps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: clamp(20px,3vw,36px); padding-bottom: clamp(48px,7vw,88px); }
-.cap h4 { font-family: var(--serif); font-weight: 600; font-size: 14px; letter-spacing: .03em; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--rule); }
-.cap ul { list-style: none; margin: 0; padding: 0; font-size: 13.5px; color: var(--ink-mid); line-height: 2.1; }
+  #toolbar{
+    position:fixed;top:0;left:0;right:0;height:53px;z-index:90;
+    display:flex;align-items:center;gap:12px;padding:0 20px;
+    background:rgba(250,247,240,.93);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--rule);font-size:13px;color:var(--ink-2);
+  }
+  #toolbar .tb-tag{
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);
+    border:1px solid var(--rule);border-radius:999px;padding:5px 11px;font-weight:560;
+  }
+  #toolbar .spacer{flex:1}
+  #toolbar .tb-size{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+  .btn{
+    font:inherit;font-size:13px;cursor:pointer;padding:8px 15px;border-radius:999px;
+    border:1px solid var(--rule);background:transparent;color:var(--ink-2);
+    transition:border-color .15s ease,color .15s ease,background .15s ease;
+  }
+  .btn:hover{border-color:var(--ink);color:var(--ink)}
+  .btn.solid{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+  .btn.solid:hover{background:#000;color:var(--bg)}
+  .btn.danger:hover{border-color:#9C3B2E;color:#9C3B2E}
 
-/* ── contact ── */
-.contact { padding-bottom: clamp(56px,8vw,96px); }
-.contact p { font-size: clamp(17px, 1vw + 14px, 21px); max-width: 42ch; font-weight: 300; color: var(--ink-mid); margin: 0 0 28px; }
+  .mini-btn{
+    font:inherit;font-size:11px;letter-spacing:.04em;cursor:pointer;
+    padding:5px 9px;border-radius:3px;border:1px solid var(--rule);
+    background:rgba(250,247,240,.95);color:var(--ink-2);
+  }
+  .mini-btn:hover{border-color:var(--ink);color:var(--ink)}
 
-/* ── footer ── */
-footer { border-top: 1px solid var(--rule); padding: 28px 0; }
-.footer-in { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px; letter-spacing: .06em; color: var(--ink-soft); }
+  .media-tools{position:absolute;left:8px;bottom:8px;display:flex;gap:6px;z-index:5}
+  .media-slot.headshot .media-tools{left:50%;bottom:50%;transform:translate(-50%,50%)}
+  .media-slot.headshot .slot-label{display:none}
+  .repeat-add{margin-top:16px}
+  .item-del{
+    position:absolute;top:0;right:0;z-index:5;
+    font:inherit;font-size:12px;line-height:1;cursor:pointer;
+    border:1px solid var(--rule);background:var(--bg);color:var(--muted);
+    border-radius:3px;padding:3px 7px;
+  }
+  .item-del:hover{border-color:#9C3B2E;color:#9C3B2E}
+  body.editing .entry,body.editing .skill-row{padding-right:34px}
+  .link-edit{
+    font:inherit;font-size:11px;cursor:pointer;margin-left:2px;
+    border:0;background:none;color:var(--muted);padding:0 2px;
+  }
+  .link-edit:hover{color:var(--ink)}
 
-/* ── sign-in ── */
-.signin { margin-top: 24px; }
-.signin-toggle {
-  font-size: 11px; letter-spacing: .1em; color: var(--ink-soft);
-  background: none; border: none; padding: 0; cursor: pointer;
-  font-family: var(--sans); text-decoration: underline; text-underline-offset: 3px;
-}
-.signin-toggle:hover { color: var(--ink); }
-.signin-form {
-  display: none; flex-direction: column; gap: 10px; margin-top: 16px;
-  background: var(--ink); padding: 20px; max-width: 320px;
-}
-.signin-form label { font-size: 11px; letter-spacing: .1em; color: #ccc; font-family: var(--sans); }
-.signin-form input {
-  font-family: var(--sans); font-size: 14px; color: #fff;
-  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.3);
-  padding: 10px 12px; width: 100%; display: block;
-}
-.signin-form input::placeholder { color: rgba(255,255,255,.4); }
-.signin-form input:focus { outline: 1px solid #fff; background: rgba(255,255,255,.15); }
-.signin-btn-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.signin-form .unlock-btn {
-  font-family: var(--sans); font-size: 13px; letter-spacing: .04em;
-  background: #fff; color: var(--ink); border: none;
-  padding: 10px 20px; cursor: pointer; font-weight: 500;
-}
-.signin-form .unlock-btn:hover { background: var(--cream-d); }
-.signin-msg { font-size: 12px; color: #f88; font-family: var(--sans); }
-.signin-msg { font-size: 12px; color: #8B3A3A; }
+  /* ---------- dialogs ---------- */
+  .overlay{
+    position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+    background:rgba(30,28,25,.32);padding:20px;
+  }
+  .card{
+    width:min(420px,100%);background:#FDFBF6;border:1px solid var(--rule);
+    border-radius:5px;padding:26px;box-shadow:0 18px 50px rgba(30,28,25,.14);
+  }
+  .card h4{margin-bottom:18px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:560}
+  .field input[type=text],.field input[type=password],.field input[type=url]{
+    width:100%;font:inherit;font-size:14px;padding:9px 11px;background:#fff;
+    border:1px solid var(--rule);border-radius:3px;color:var(--ink);
+  }
+  .field input:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 2px rgba(199,185,154,.35)}
+  .field input[type=file]{font:inherit;font-size:12.5px;width:100%}
+  .hint{font-size:12px;color:var(--muted);line-height:1.5;margin:-6px 0 14px}
+  .row{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+  .row .left{margin-right:auto}
+  .err{color:#9C3B2E;font-size:12.5px;min-height:17px;margin-top:-4px}
 
-/* ── edit bar ── */
-.bar { display: none; position: fixed; bottom: 16px; right: 16px; z-index: 60; background: var(--ink); color: var(--cream); padding: 10px 14px; gap: 10px; align-items: center; box-shadow: 0 4px 24px rgba(0,0,0,.18); }
-body.is-editing .bar { display: flex; flex-wrap: wrap; }
-.bar-note { font-size: 11px; letter-spacing: .12em; margin-right: 4px; opacity: .7; }
-.bar button { font-family: var(--sans); font-size: 13px; background: none; border: 1px solid rgba(247,243,238,.3); color: var(--cream); padding: 6px 14px; cursor: pointer; letter-spacing: .02em; }
-.bar button:hover { background: rgba(247,243,238,.12); }
-.bar button.primary { background: var(--cream); color: var(--ink); border-color: var(--cream); }
-.bar button.primary:hover { background: var(--cream-d); }
-body.is-editing [contenteditable="true"] { outline: 1px dashed rgba(26,24,20,.25); outline-offset: 3px; }
-body.is-editing [contenteditable="true"]:focus { outline: 1px solid var(--ink); }
-@media (max-width: 480px) { .bar { left: 16px; right: 16px; } }
+  /* ---------- responsive ---------- */
+  @media (max-width:860px){
+    .wrap{padding:0 22px}
+    .hero{grid-template-columns:1fr;gap:30px;padding:56px 0 44px}
+    .headshot{width:112px;order:-1}
+    .project{grid-template-columns:1fr;gap:26px}
+    .minors{grid-template-columns:1fr;gap:32px}
+    .skill-row{grid-template-columns:1fr;gap:2px}
+  }
+  @media print{
+    #loginBtn,#toolbar,.media-tools,.item-del,.repeat-add,.link-edit{display:none!important}
+    body{background:#fff}
+  }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-in">
-    <a class="nav-mark" href="#hero">Tareq Y.</a>
-    <a href="#about" class="hide-sm">About</a>
-    <a href="#work">Work</a>
-    <a href="#contact">Contact</a>
-    <a href="#" data-todo="resume" style="margin-left:auto">Résumé ↗</a>
-  </div>
-</nav>
-
 <div class="wrap">
 
-  <!-- HERO -->
-  <header class="hero" id="hero">
-    <div class="hero-grid">
-      <div>
-        <h1>Robotics &amp; autonomous<br><em>systems engineer.</em></h1>
-        <p class="hero-lede">I design and build the whole machine — from the reducer I machine myself to the firmware I write myself.</p>
-        <p class="hero-meta">MS ROBOTICS · BOSTON UNIVERSITY · LEAP<br>PYTHON / C++ / SOLIDWORKS / EMBEDDED</p>
-        <div class="cta">
-          <a class="btn" href="#work">See the work</a>
-          <a class="btn btn-ghost" href="#contact">Get in touch</a>
-        </div>
-      </div>
-      <div class="headshot-wrap">
-        <div class="headshot" id="headshot-click" title="Click to upload a photo in edit mode">
-          <img id="headshot-img" src="" alt="Tareq" style="display:none">
-          <div class="headshot-placeholder" id="headshot-ph">YOUR<br>PHOTO</div>
-          <div class="headshot-hint">Upload photo</div>
-        </div>
+  <header class="hero">
+    <div class="hero-text">
+      <h1 data-edit data-single>Tareq Younis</h1>
+      <p class="role" data-edit data-single>Robotics Engineer</p>
+      <p class="tagline" data-edit>One or two lines about what you build and what you're after. Replace this.</p>
+      <div class="links" data-linkset>
+        <a class="chip primary" data-link href="#">Résumé</a>
+        <a class="chip" data-link href="#">Email</a>
+        <a class="chip" data-link href="#">GitHub</a>
+        <a class="chip" data-link href="#">LinkedIn</a>
       </div>
     </div>
+    <div class="media-slot headshot" data-media data-accept="image" data-label="Headshot"></div>
   </header>
 
-  <hr>
-
-  <!-- ABOUT -->
   <section id="about">
-    <div class="section-head">
-      <h2>About</h2>
-      <div class="section-rule"></div>
+    <p class="eyebrow">About</p>
+    <div class="prose" data-edit>
+      <p>Short paragraph. Replace this.</p>
     </div>
-    <div class="about-grid">
-      <div>
-        <p>I am a master's student in robotics and autonomous systems at Boston University, in the LEAP program. I build hardware for a living well before anyone pays me to.</p>
-        <p>What I look for in a project is the part most people buy. On the arm it was the reducer; on the jet engine it was the compressor; on the robot it was the middleware. Each time the decision costs me months and teaches me something a bought part never would.</p>
-        <p>I work across mechanical, electrical, and software rather than choosing one — because most of the interesting failures in a robot live at the boundaries between them.</p>
+  </section>
+
+  <section id="education">
+    <p class="eyebrow">Education</p>
+    <ul class="entries" data-repeat="education">
+      <li class="entry">
+        <div class="entry-head">
+          <span class="entry-title" data-edit data-single>Degree</span>
+          <span class="entry-meta" data-edit data-single>Year — Year</span>
+        </div>
+        <div class="entry-sub" data-edit data-single>Institution, location</div>
+      </li>
+      <li class="entry">
+        <div class="entry-head">
+          <span class="entry-title" data-edit data-single>Degree</span>
+          <span class="entry-meta" data-edit data-single>Year — Year</span>
+        </div>
+        <div class="entry-sub" data-edit data-single>Institution, location</div>
+      </li>
+    </ul>
+  </section>
+
+  <section id="skills">
+    <p class="eyebrow">Skills &amp; Tools</p>
+    <div class="skills" data-repeat="skill">
+      <div class="skill-row">
+        <span class="skill-cat" data-edit data-single>Category</span>
+        <span class="skill-val" data-edit data-single>Comma, separated, list</span>
       </div>
-      <div class="about-stats">
-        <div class="stat"><span class="stat-label">PROGRAMME</span><span class="stat-val">MS Robotics &amp; Autonomous Systems</span></div>
-        <div class="stat"><span class="stat-label">UNIVERSITY</span><span class="stat-val">Boston University, LEAP</span></div>
-        <div class="stat"><span class="stat-label">DURATION</span><span class="stat-val">2 years</span></div>
-        <div class="stat"><span class="stat-label">LOCATION</span><span class="stat-val">Massachusetts, USA</span></div>
-        <div class="stat"><span class="stat-label">FACILITIES</span><span class="stat-val">EPIC fabrication, RASTIC mocap</span></div>
+      <div class="skill-row">
+        <span class="skill-cat" data-edit data-single>Category</span>
+        <span class="skill-val" data-edit data-single>Comma, separated, list</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-cat" data-edit data-single>Category</span>
+        <span class="skill-val" data-edit data-single>Comma, separated, list</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-cat" data-edit data-single>Category</span>
+        <span class="skill-val" data-edit data-single>Comma, separated, list</span>
       </div>
     </div>
   </section>
 
-  <hr>
-
-  <!-- WORK -->
   <section id="work">
-    <div class="section-head">
-      <h2>Work</h2>
-      <div class="section-rule"></div>
-      <span class="section-label">6 PROJECTS</span>
-    </div>
+    <p class="eyebrow">Selected Work</p>
 
-    <div class="projects">
-
-      <div class="project project-odd" id="rb-01">
-        <div class="project-text">
-          <p class="project-status"><span class="st st-live">IN PROGRESS</span></p>
-          <h3>Autonomous differential-drive robot</h3>
-          <p class="project-ctx">Independent build · Jetson Orin · no ROS</p>
-          <p>Written from bare metal — I drive the motor controller over raw I²C, decode quadrature counts off the register block, and close the velocity loop myself. Skipping ROS was deliberate: it costs the ecosystem and buys a real understanding of odometry, timing, and transport.</p>
-          <p>Long-term goals: RPLIDAR SLAM, stereo camera fusion, live web telemetry.</p>
-          <div class="tags"><span class="tag">Python</span><span class="tag">I²C</span><span class="tag">Odometry</span><span class="tag">PID</span><span class="tag">Jetson Orin</span></div>
-        </div>
-        <div class="project-img" data-slot="1">
-          <img data-project-img="1" src="" alt="" style="display:none">
-          <div class="img-placeholder">ADD PROJECT IMAGE</div>
-          <div class="img-hint">Upload image</div>
+    <article class="project">
+      <div class="project-body">
+        <p class="project-meta" data-edit data-single>Year · Role</p>
+        <h3 data-edit data-single>Project One</h3>
+        <div data-edit><p>Description. Replace this.</p></div>
+        <div class="links" data-linkset>
+          <a class="chip" data-link href="#">Link</a>
         </div>
       </div>
+      <div class="media-slot" data-media data-label="Video or image"></div>
+    </article>
 
-      <div class="project project-even" id="rb-02">
-        <div class="project-text">
-          <p class="project-status"><span class="st st-live">IN PROGRESS</span></p>
-          <h3>6-DOF arm with self-designed cycloidal reducers</h3>
-          <p class="project-ctx">Independent build · aluminium · BU EPIC</p>
-          <p>Integrated actuator modules were the easy answer and I turned them down. I am designing the cycloidal reducers, cutting the discs on wire EDM, and then measuring what I actually made — backlash, transmission error, efficiency, and torque ripple.</p>
-          <p>A bought actuator tells an employer I can read a datasheet. A reducer I designed, machined, and characterised tells them something else.</p>
-          <div class="tags"><span class="tag">SolidWorks</span><span class="tag">Wire EDM</span><span class="tag">Cycloidal drive</span><span class="tag">Metrology</span></div>
-        </div>
-        <div class="project-img" data-slot="2">
-          <img data-project-img="2" src="" alt="" style="display:none">
-          <div class="img-placeholder">ADD PROJECT IMAGE</div>
-          <div class="img-hint">Upload image</div>
+    <article class="project">
+      <div class="project-body">
+        <p class="project-meta" data-edit data-single>Year · Role</p>
+        <h3 data-edit data-single>Project Two</h3>
+        <div data-edit><p>Description. Replace this.</p></div>
+        <div class="links" data-linkset>
+          <a class="chip" data-link href="#">Link</a>
         </div>
       </div>
+      <div class="media-slot" data-media data-label="Video or image"></div>
+    </article>
 
-      <div class="project project-odd" id="pr-01">
-        <div class="project-text">
-          <p class="project-status"><span class="st">DESIGN STUDY</span></p>
-          <h3>Axial-flow turbojet for small UAVs</h3>
-          <p class="project-ctx">Independent design study · six-phase roadmap, phase 1 complete</p>
-          <p>Almost every hobby-scale jet uses a centrifugal compressor because it is far easier to make. I am going fully axial. The whole architecture follows from what I can manufacture: a constant-tip-diameter annulus for straight-bore lathe work, and ruled-surface blisks cut on wire EDM.</p>
-          <p>Phase 1 complete — mean-line design off the Euler turbomachine equation, velocity triangles closed at the mean radius. Targeting 150–400 N.</p>
-          <div class="tags"><span class="tag">Turbomachinery</span><span class="tag">Gas dynamics</span><span class="tag">DFM</span><span class="tag">Python</span></div>
-        </div>
-        <div class="project-img" data-slot="3">
-          <img data-project-img="3" src="" alt="" style="display:none">
-          <div class="img-placeholder">ADD PROJECT IMAGE</div>
-          <div class="img-hint">Upload image</div>
+    <article class="project">
+      <div class="project-body">
+        <p class="project-meta" data-edit data-single>Year · Role</p>
+        <h3 data-edit data-single>Project Three</h3>
+        <div data-edit><p>Description. Replace this.</p></div>
+        <div class="links" data-linkset>
+          <a class="chip" data-link href="#">Link</a>
         </div>
       </div>
+      <div class="media-slot" data-media data-label="Video or image"></div>
+    </article>
+  </section>
 
-      <div class="project project-even" id="av-01">
-        <div class="project-text">
-          <p class="project-status"><span class="st st-live">BENCH TEST</span></p>
-          <h3>Attitude-hold autopilot, fixed-wing aircraft</h3>
-          <p class="project-ctx">Independent build · Jetson Nano · BNO055 IMU</p>
-          <p>The aircraft already flies on manual control. I am adding an IMU-driven attitude-hold loop in C++ that takes over the control surfaces mid-flight, tested by suspending the airframe from the ceiling and checking that the surfaces answer a disturbance correctly before anything is risked in the air.</p>
-          <div class="tags"><span class="tag">C++</span><span class="tag">Sensor fusion</span><span class="tag">SBUS</span><span class="tag">Flight control</span></div>
-        </div>
-        <div class="project-img" data-slot="4">
-          <img data-project-img="4" src="" alt="" style="display:none">
-          <div class="img-placeholder">ADD PROJECT IMAGE</div>
-          <div class="img-hint">Upload image</div>
-        </div>
-      </div>
-
-      <div class="project project-odd" id="pe-01">
-        <div class="project-text">
-          <p class="project-status"><span class="st">PLANNED</span></p>
-          <h3>1–3 kW motor dynamometer</h3>
-          <p class="project-ctx">Independent build · own inverter and FOC</p>
-          <p>Two machines on a common shaft, one motoring and one loading. The inverter is mine down to the gate drivers and current sensing, with field-oriented control on an STM32. Output: real torque-speed curves and efficiency maps, not vendor specs.</p>
-          <div class="tags"><span class="tag">Power electronics</span><span class="tag">FOC</span><span class="tag">STM32</span><span class="tag">PCB design</span></div>
-        </div>
-        <div class="project-img" data-slot="5">
-          <img data-project-img="5" src="" alt="" style="display:none">
-          <div class="img-placeholder">ADD PROJECT IMAGE</div>
-          <div class="img-hint">Upload image</div>
-        </div>
-      </div>
-
-      </div>
-
+  <section id="other">
+    <p class="eyebrow">Other Work</p>
+    <div class="minors">
+      <article class="minor">
+        <h4 data-edit data-single>Project Four</h4>
+        <div data-edit><p>One or two lines.</p></div>
+        <div class="links" data-linkset><a class="chip" data-link href="#">Link</a></div>
+      </article>
+      <article class="minor">
+        <h4 data-edit data-single>Project Five</h4>
+        <div data-edit><p>One or two lines.</p></div>
+        <div class="links" data-linkset><a class="chip" data-link href="#">Link</a></div>
+      </article>
+      <article class="minor">
+        <h4 data-edit data-single>Project Six</h4>
+        <div data-edit><p>One or two lines.</p></div>
+        <div class="links" data-linkset><a class="chip" data-link href="#">Link</a></div>
+      </article>
     </div>
   </section>
 
-  <hr>
+  <footer>
+    <span data-edit data-single>Tareq Younis</span>
+    <button id="loginBtn" type="button" aria-label="Site owner login">login</button>
+  </footer>
 
-  <!-- CAPABILITIES -->
-  <section id="capabilities">
-    <div class="section-head">
-      <h2>Capabilities</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="caps">
-      <div class="cap">
-        <h4>Fabrication</h4>
-        <ul><li>Manual + CNC machining</li><li>Wire EDM</li><li>Investment casting</li><li>3D printing</li><li>BU EPIC access</li></ul>
-      </div>
-      <div class="cap">
-        <h4>Design</h4>
-        <ul><li>SolidWorks</li><li>Mechanism design</li><li>Reducer design</li><li>Design for manufacture</li><li>Turbomachinery sizing</li></ul>
-      </div>
-      <div class="cap">
-        <h4>Embedded &amp; control</h4>
-        <ul><li>C++, Python</li><li>I²C, SPI, UART, SBUS</li><li>IMU sensor fusion</li><li>Closed-loop motor control</li><li>Jetson, STM32</li></ul>
-      </div>
-      <div class="cap">
-        <h4>Test &amp; measurement</h4>
-        <ul><li>RASTIC motion capture</li><li>Backlash &amp; TE measurement</li><li>Torque-speed characterisation</li><li>Oscilloscope, logic analyser</li></ul>
-      </div>
-    </div>
-  </section>
-
-  <hr>
-
-  <!-- CONTACT -->
-  <section class="contact" id="contact">
-    <div class="section-head">
-      <h2>Contact</h2>
-      <div class="section-rule"></div>
-    </div>
-    <p>Looking for robotics, actuator, propulsion, and embedded roles — internship or full-time.</p>
-    <div class="cta">
-      <a class="btn" href="#" data-todo="email">Email me</a>
-      <a class="btn btn-ghost" href="#" data-todo="github">GitHub ↗</a>
-      <a class="btn btn-ghost" href="#" data-todo="linkedin">LinkedIn ↗</a>
-    </div>
-  </section>
-
-</div><!-- /.wrap -->
-
-<footer>
-  <div class="wrap">
-    <div class="footer-in">
-      <span>Tareq Y. · Robotics &amp; Autonomous Systems · Boston University</span>
-      <span>2026</span>
-    </div>
-
-    <div class="signin" id="signin">
-      <button class="signin-toggle" type="button" id="signin-toggle" aria-expanded="false">SIGN IN TO EDIT</button>
-      <div class="signin-form" id="signin-form">
-        <div>
-          <label for="signin-user">USERNAME</label>
-          <input id="signin-user" type="text" placeholder="username" autocomplete="off">
-        </div>
-        <div>
-          <label for="signin-pass">PASSWORD</label>
-          <input id="signin-pass" type="password" placeholder="password" autocomplete="off">
-        </div>
-        <div class="signin-btn-row">
-          <button class="unlock-btn" type="button" id="signin-go">Unlock</button>
-          <span class="signin-msg" id="signin-msg" role="status"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<div class="bar" data-edit-ui role="toolbar">
-  <span class="bar-note">EDIT MODE</span>
-  <button class="primary" type="button" id="edit-export">Download index.html</button>
-  <button type="button" id="edit-exit">Exit</button>
 </div>
 
-<input type="file" id="img-picker" accept="image/*" style="display:none">
+<template id="tpl-education"><li class="entry"><div class="entry-head"><span class="entry-title" data-edit data-single>Degree</span><span class="entry-meta" data-edit data-single>Year — Year</span></div><div class="entry-sub" data-edit data-single>Institution, location</div></li></template>
+<template id="tpl-skill"><div class="skill-row"><span class="skill-cat" data-edit data-single>Category</span><span class="skill-val" data-edit data-single>Comma, separated, list</span></div></template>
 
 <script>
-var USER = 'tareq', PASS = 'balls';
+(function () {
+  "use strict";
 
-/* ── nav active state ── */
-var navLinks = [].slice.call(document.querySelectorAll('nav a[href^="#"]'));
-var navTargets = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); });
-var navObs = new IntersectionObserver(function(entries){
-  entries.forEach(function(entry){
-    if (!entry.isIntersecting) return;
-    var i = navTargets.indexOf(entry.target);
-    navLinks.forEach(function(a,j){ a.classList.toggle('active', j===i); });
-  });
-}, { rootMargin: '-40% 0px -55% 0px' });
-navTargets.forEach(function(t){ if(t) navObs.observe(t); });
+  /* ------------------------------------------------------------------
+     NOTE ON THE LOGIN: this is a convenience gate, not security. The
+     credentials live in this file, which anyone can read. Edit mode only
+     changes the copy in the visitor's own browser tab — it cannot alter
+     the deployed site. The only way a change becomes real is you exporting
+     index.html and re-uploading it. Treat this as a UI toggle.
+  ------------------------------------------------------------------ */
+  var USER = "tareq";
+  var PASS = "balls";
 
-/* ── todo links ── */
-document.querySelectorAll('[data-todo]').forEach(function(el){
-  el.addEventListener('click', function(e){ e.preventDefault(); });
-  el.style.opacity = '.45';
-  el.title = 'Add link: ' + el.dataset.todo;
-});
+  var body = document.body;
+  var editing = false;
+  var dirty = false;
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* ── sign in ── */
-var signin = document.getElementById('signin');
-var msg    = document.getElementById('signin-msg');
-var userEl = document.getElementById('signin-user');
-var passEl = document.getElementById('signin-pass');
-var toggle = document.getElementById('signin-toggle');
-
-var form = document.getElementById('signin-form');
-toggle.addEventListener('click', function(){
-  var hidden = form.style.display === 'none' || form.style.display === '';
-  form.style.display = hidden ? 'flex' : 'none';
-  toggle.setAttribute('aria-expanded', String(hidden));
-  if (hidden) setTimeout(function(){ userEl.focus(); }, 20);
-});
-
-function attempt(){
-  if (userEl.value.trim().toLowerCase()===USER && passEl.value===PASS){
-    userEl.value=''; passEl.value=''; msg.textContent='';
-    form.style.display = 'none';
-    toggle.setAttribute('aria-expanded','false');
-    enterEdit();
-  } else {
-    msg.textContent='Wrong credentials.';
-    passEl.value=''; passEl.focus();
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function el(tag, cls, txt) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt != null) n.textContent = txt;
+    return n;
   }
-}
-document.getElementById('signin-go').addEventListener('click', attempt);
-[userEl,passEl].forEach(function(el){
-  el.addEventListener('keydown', function(e){ if(e.key==='Enter') attempt(); });
-});
+  function markDirty() { dirty = true; scheduleSize(); }
 
-/* ── editable selectors ── */
-var EDITABLE = [
-  'nav .nav-mark', '.hero h1', '.hero-lede', '.hero-meta',
-  '.section-head h2', '.section-label',
-  '.pn', '.project h3', '.project-ctx', '.project p', '.st',
-  '.tag', '.cap h4', '.cap li',
-  '.about-grid p', '.stat-val',
-  '.contact p', '.btn', '.footer-in span'
-].join(', ');
+  /* =============== video autoplay on scroll =============== */
+  var io = null;
+  if ("IntersectionObserver" in window) {
+    io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting && e.intersectionRatio >= 0.35) {
+          var p = v.play();
+          if (p && p.catch) p.catch(function () {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      });
+    }, { threshold: [0, 0.35, 0.6] });
+  }
+  function registerVideo(v) {
+    v.muted = true;
+    if (reduceMotion) { v.controls = true; return; }
+    if (io) io.observe(v);
+  }
+  function scanVideos() { $$("video[data-auto]").forEach(registerVideo); }
 
-function blockNav(e){ e.preventDefault(); }
-
-function enterEdit(){
-  document.body.classList.add('is-editing');
-  document.querySelectorAll(EDITABLE).forEach(function(el){
-    el.setAttribute('contenteditable','true');
-    el.setAttribute('spellcheck','true');
-    if (el.tagName==='A') el.addEventListener('click', blockNav);
+  /* =============== dialogs =============== */
+  var openOverlay = null;
+  function dialog(build) {
+    closeDialog();
+    var ov = el("div", "overlay");
+    ov.setAttribute("data-editor-only", "");
+    var card = el("div", "card");
+    ov.appendChild(card);
+    build(card, closeDialog);
+    ov.addEventListener("mousedown", function (e) { if (e.target === ov) closeDialog(); });
+    document.body.appendChild(ov);
+    openOverlay = ov;
+    var first = card.querySelector("input,button");
+    if (first) first.focus();
+    return card;
+  }
+  function closeDialog() {
+    if (openOverlay && openOverlay.parentNode) openOverlay.parentNode.removeChild(openOverlay);
+    openOverlay = null;
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && openOverlay) closeDialog();
   });
-  document.querySelector('.bar .primary').focus();
-}
 
-function exitEdit(){
-  document.body.classList.remove('is-editing');
-  document.querySelectorAll('[contenteditable]').forEach(function(el){
-    el.removeAttribute('contenteditable');
-    el.removeAttribute('spellcheck');
-    if (el.tagName==='A') el.removeEventListener('click', blockNav);
+  function field(parent, label, type, value, placeholder) {
+    var f = el("div", "field");
+    var l = el("label", null, label);
+    var i = document.createElement("input");
+    i.type = type || "text";
+    if (value != null) i.value = value;
+    if (placeholder) i.placeholder = placeholder;
+    f.appendChild(l); f.appendChild(i); parent.appendChild(f);
+    return i;
+  }
+  function hint(parent, text) { var h = el("p", "hint", text); parent.appendChild(h); return h; }
+  function rowOf(parent) { var r = el("div", "row"); parent.appendChild(r); return r; }
+  function button(parent, label, cls, fn) {
+    var b = el("button", "btn" + (cls ? " " + cls : ""), label);
+    b.type = "button";
+    b.addEventListener("click", fn);
+    parent.appendChild(b);
+    return b;
+  }
+
+  /* =============== login =============== */
+  $("#loginBtn").addEventListener("click", function () {
+    dialog(function (card, close) {
+      card.appendChild(el("h4", null, "Sign in"));
+      var u = field(card, "Username", "text", "");
+      var p = field(card, "Password", "password", "");
+      var err = el("p", "err", ""); card.appendChild(err);
+      var r = rowOf(card);
+      button(r, "Cancel", null, close);
+      var go = button(r, "Enter edit mode", "solid", submit);
+      function submit() {
+        if (u.value.trim() === USER && p.value === PASS) { close(); enterEdit(); }
+        else { err.textContent = "Incorrect username or password."; p.value = ""; p.focus(); }
+      }
+      [u, p].forEach(function (i) {
+        i.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); submit(); } });
+      });
+      void go;
+    });
   });
-}
-document.getElementById('edit-exit').addEventListener('click', exitEdit);
 
-document.addEventListener('paste', function(e){
-  if (!document.body.classList.contains('is-editing')) return;
-  var t = e.target;
-  if (!t.closest || !t.closest('[contenteditable]')) return;
-  e.preventDefault();
-  document.execCommand('insertText', false, (e.clipboardData||window.clipboardData).getData('text'));
-});
+  /* =============== editable text =============== */
+  function onPaste(e) {
+    e.preventDefault();
+    var t = (e.clipboardData || window.clipboardData).getData("text/plain");
+    document.execCommand("insertText", false, t);
+  }
+  function onKeydownSingle(e) {
+    if (e.key === "Enter") e.preventDefault();
+  }
+  function enableText() {
+    $$("[data-edit]").forEach(function (n) {
+      n.setAttribute("contenteditable", "true");
+      n.setAttribute("spellcheck", "true");
+      n.addEventListener("paste", onPaste);
+      n.addEventListener("input", markDirty);
+      if (n.hasAttribute("data-single")) n.addEventListener("keydown", onKeydownSingle);
+    });
+  }
+  function disableText() {
+    $$("[data-edit]").forEach(function (n) {
+      n.removeAttribute("contenteditable");
+      n.removeAttribute("spellcheck");
+      n.removeEventListener("paste", onPaste);
+      n.removeEventListener("input", markDirty);
+      n.removeEventListener("keydown", onKeydownSingle);
+    });
+  }
 
-/* ── image upload ── */
-var picker  = document.getElementById('img-picker');
-var pending = null; /* { img: <img>, ph: <div> } */
+  /* =============== media slots =============== */
+  function isVideoSrc(s) { return /^data:video\//i.test(s) || /\.(mp4|webm|ogv|ogg|mov|m4v)(\?|#|$)/i.test(s); }
 
-function activateSlot(imgEl, phEl){
-  if (!document.body.classList.contains('is-editing')) return;
-  pending = { img: imgEl, ph: phEl };
-  picker.value = '';
-  picker.click();
-}
+  function setMedia(slot, src) {
+    slot.innerHTML = "";
+    if (!src) { if (editing) addMediaTools(slot); markDirty(); return; }
+    var node;
+    if (isVideoSrc(src) && slot.getAttribute("data-accept") !== "image") {
+      node = document.createElement("video");
+      node.src = src;
+      node.setAttribute("data-auto", "");
+      node.muted = true; node.setAttribute("muted", "");
+      node.loop = true; node.setAttribute("loop", "");
+      node.setAttribute("playsinline", "");
+      node.setAttribute("preload", "metadata");
+      registerVideo(node);
+    } else {
+      node = document.createElement("img");
+      node.src = src;
+      node.alt = "";
+      node.setAttribute("loading", "lazy");
+    }
+    slot.appendChild(node);
+    if (editing) addMediaTools(slot);
+    markDirty();
+  }
 
-/* headshot */
-document.getElementById('headshot-click').addEventListener('click', function(){
-  activateSlot(document.getElementById('headshot-img'), document.getElementById('headshot-ph'));
-});
+  function currentSrc(slot) {
+    var m = slot.querySelector("img,video");
+    return m ? m.getAttribute("src") : "";
+  }
 
-/* project slots */
-document.querySelectorAll('.project-img').forEach(function(wrap){
-  wrap.addEventListener('click', function(){
-    var img = wrap.querySelector('img[data-project-img]');
-    var ph  = wrap.querySelector('.img-placeholder');
-    activateSlot(img, ph);
+  function mediaDialog(slot) {
+    var imageOnly = slot.getAttribute("data-accept") === "image";
+    dialog(function (card, close) {
+      card.appendChild(el("h4", null, imageOnly ? "Headshot" : "Project media"));
+      var url = field(card, "Path or URL", "text", currentSrc(slot).slice(0, 5) === "data:" ? "" : currentSrc(slot),
+        imageOnly ? "assets/headshot.jpg" : "assets/arm.mp4");
+      hint(card, "Relative path to a file you commit next to index.html, or a full URL. Keeps this file small — use this for anything over a couple of MB.");
+      var f = el("div", "field");
+      f.appendChild(el("label", null, "…or embed a file"));
+      var fi = document.createElement("input");
+      fi.type = "file";
+      fi.accept = imageOnly ? "image/*" : "image/*,video/*";
+      f.appendChild(fi);
+      card.appendChild(f);
+      hint(card, "Embedded files are base64-encoded into index.html and grow it by about a third of their size. Fine for stills and short clips; not for a 40 MB video.");
+      var err = el("p", "err", ""); card.appendChild(err);
+
+      var r = rowOf(card);
+      if (currentSrc(slot)) {
+        var rm = button(r, "Remove", "danger", function () { setMedia(slot, ""); close(); });
+        rm.classList.add("left");
+      }
+      button(r, "Cancel", null, close);
+      button(r, "Apply", "solid", function () {
+        var file = fi.files && fi.files[0];
+        if (file) {
+          if (file.size > 25 * 1024 * 1024) {
+            err.textContent = "That file is " + fmtBytes(file.size) + ". Use a path instead.";
+            return;
+          }
+          var fr = new FileReader();
+          fr.onload = function () { setMedia(slot, fr.result); close(); };
+          fr.onerror = function () { err.textContent = "Could not read that file."; };
+          fr.readAsDataURL(file);
+        } else {
+          setMedia(slot, url.value.trim());
+          close();
+        }
+      });
+    });
+  }
+
+  function addMediaTools(slot) {
+    $$(".media-tools, .slot-label", slot).forEach(function (n) { n.remove(); });
+    if (!currentSrc(slot)) {
+      var lab = el("div", "slot-label", slot.getAttribute("data-label") || "");
+      lab.setAttribute("data-editor-only", "");
+      slot.appendChild(lab);
+    }
+    var tools = el("div", "media-tools");
+    tools.setAttribute("data-editor-only", "");
+    var b = el("button", "mini-btn", currentSrc(slot) ? "Replace" : "Add media");
+    b.type = "button";
+    b.addEventListener("click", function (e) { e.stopPropagation(); mediaDialog(slot); });
+    tools.appendChild(b);
+    slot.appendChild(tools);
+  }
+  function enableMedia() { $$("[data-media]").forEach(addMediaTools); }
+
+  /* =============== links =============== */
+  function linkDialog(a) {
+    dialog(function (card, close) {
+      card.appendChild(el("h4", null, "Link"));
+      var label = field(card, "Label", "text", a.textContent.trim(), "Download résumé");
+      var href = a.getAttribute("href") || "";
+      var url = field(card, "URL or path", "text", href.slice(0, 5) === "data:" ? "" : (href === "#" ? "" : href),
+        "https://… or assets/resume.pdf");
+      var f = el("div", "field");
+      f.appendChild(el("label", null, "…or attach a file to download"));
+      var fi = document.createElement("input");
+      fi.type = "file";
+      f.appendChild(fi);
+      card.appendChild(f);
+      hint(card, "An attached file is embedded in index.html and downloads on click. A résumé PDF is a good fit; large files are not.");
+      var err = el("p", "err", ""); card.appendChild(err);
+
+      var r = rowOf(card);
+      var rm = button(r, "Delete link", "danger", function () { a.remove(); markDirty(); close(); });
+      rm.classList.add("left");
+      button(r, "Cancel", null, close);
+      button(r, "Save", "solid", function () {
+        var file = fi.files && fi.files[0];
+        a.textContent = label.value.trim() || "Link";
+        if (file) {
+          if (file.size > 25 * 1024 * 1024) { err.textContent = "That file is " + fmtBytes(file.size) + ". Too large to embed."; return; }
+          var fr = new FileReader();
+          fr.onload = function () {
+            a.setAttribute("href", fr.result);
+            a.setAttribute("download", file.name);
+            a.removeAttribute("target");
+            markDirty(); close();
+          };
+          fr.onerror = function () { err.textContent = "Could not read that file."; };
+          fr.readAsDataURL(file);
+        } else {
+          var v = url.value.trim();
+          a.setAttribute("href", v || "#");
+          a.removeAttribute("download");
+          if (/^https?:/i.test(v)) { a.setAttribute("target", "_blank"); a.setAttribute("rel", "noopener"); }
+          else { a.removeAttribute("target"); a.removeAttribute("rel"); }
+          markDirty(); close();
+        }
+      });
+    });
+  }
+
+  function onLinkClick(e) {
+    if (!editing) return;
+    e.preventDefault();
+    e.stopPropagation();
+    linkDialog(e.currentTarget);
+  }
+  function enableLinks() {
+    $$("a[data-link]").forEach(function (a) { a.addEventListener("click", onLinkClick); });
+    $$("[data-linkset]").forEach(function (set) {
+      var b = el("button", "mini-btn", "+ link");
+      b.type = "button";
+      b.setAttribute("data-editor-only", "");
+      b.addEventListener("click", function () {
+        var a = el("a", "chip", "Link");
+        a.setAttribute("data-link", "");
+        a.setAttribute("href", "#");
+        a.addEventListener("click", onLinkClick);
+        set.insertBefore(a, b);
+        markDirty();
+        linkDialog(a);
+      });
+      set.appendChild(b);
+    });
+  }
+  function disableLinks() {
+    $$("a[data-link]").forEach(function (a) { a.removeEventListener("click", onLinkClick); });
+  }
+
+  /* =============== repeatable rows =============== */
+  function decorateItem(item) {
+    if ($(".item-del", item)) return;
+    var d = el("button", "item-del", "×");
+    d.type = "button";
+    d.title = "Remove";
+    d.setAttribute("data-editor-only", "");
+    d.addEventListener("click", function () {
+      var parent = item.parentNode;
+      if (parent.children.length <= 1) return;
+      item.remove(); markDirty();
+    });
+    item.appendChild(d);
+  }
+  function enableRepeats() {
+    $$("[data-repeat]").forEach(function (box) {
+      Array.prototype.forEach.call(box.children, decorateItem);
+      var tpl = $("#tpl-" + box.getAttribute("data-repeat"));
+      if (!tpl) return;
+      var add = el("button", "mini-btn repeat-add", "+ add");
+      add.type = "button";
+      add.setAttribute("data-editor-only", "");
+      add.addEventListener("click", function () {
+        var frag = tpl.content.cloneNode(true);
+        var node = frag.firstElementChild;
+        box.appendChild(frag);
+        $$("[data-edit]", node).concat(node.hasAttribute("data-edit") ? [node] : []).forEach(function (n) {
+          n.setAttribute("contenteditable", "true");
+          n.setAttribute("spellcheck", "true");
+          n.addEventListener("paste", onPaste);
+          n.addEventListener("input", markDirty);
+          if (n.hasAttribute("data-single")) n.addEventListener("keydown", onKeydownSingle);
+        });
+        decorateItem(node);
+        markDirty();
+      });
+      box.parentNode.insertBefore(add, box.nextSibling);
+    });
+  }
+
+  /* =============== toolbar / size =============== */
+  var sizeTimer = null, sizeEl = null;
+  function fmtBytes(n) {
+    if (n < 1024) return n + " B";
+    if (n < 1048576) return (n / 1024).toFixed(0) + " KB";
+    return (n / 1048576).toFixed(1) + " MB";
+  }
+  function scheduleSize() {
+    if (!sizeEl) return;
+    clearTimeout(sizeTimer);
+    sizeTimer = setTimeout(function () {
+      var n = new Blob([document.documentElement.outerHTML]).size;
+      sizeEl.textContent = "index.html ≈ " + fmtBytes(n);
+      sizeEl.style.color = n > 45 * 1048576 ? "#9C3B2E" : "";
+    }, 250);
+  }
+  function buildToolbar() {
+    var t = el("div");
+    t.id = "toolbar";
+    t.setAttribute("data-editor-only", "");
+    t.appendChild(el("span", "tb-tag", "Edit mode"));
+    t.appendChild(el("span", null, "Click any text to change it."));
+    t.appendChild(el("span", "spacer"));
+    sizeEl = el("span", "tb-size", "");
+    t.appendChild(sizeEl);
+    var save = el("button", "btn solid", "Download index.html");
+    save.type = "button";
+    save.addEventListener("click", exportFile);
+    t.appendChild(save);
+    var exit = el("button", "btn", "Exit");
+    exit.type = "button";
+    exit.addEventListener("click", function () {
+      if (dirty && !window.confirm("Exit without downloading? Unsaved edits are lost.")) return;
+      exitEdit();
+    });
+    t.appendChild(exit);
+    document.body.appendChild(t);
+    scheduleSize();
+  }
+
+  /* =============== enter / exit / export =============== */
+  function enterEdit() {
+    if (editing) return;
+    editing = true;
+    body.classList.add("editing");
+    enableText();
+    enableMedia();
+    enableLinks();
+    enableRepeats();
+    buildToolbar();
+  }
+
+  function exitEdit() {
+    if (!editing) return;
+    closeDialog();
+    disableText();
+    disableLinks();
+    $$("[data-editor-only]").forEach(function (n) { n.remove(); });
+    sizeEl = null;
+    body.classList.remove("editing");
+    editing = false;
+  }
+
+  function exportFile() {
+    var was = editing;
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    exitEdit();
+
+    // serialize the live DOM, now free of every editor-only node
+    var html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "index.html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+
+    dirty = false;
+    if (was) enterEdit();
+  }
+
+  window.addEventListener("beforeunload", function (e) {
+    if (editing && dirty) { e.preventDefault(); e.returnValue = ""; }
   });
-});
 
-picker.addEventListener('change', function(){
-  if (!picker.files || !picker.files[0] || !pending) return;
-  var reader = new FileReader();
-  reader.onload = function(e){
-    pending.img.src = e.target.result;
-    pending.img.style.display = 'block';
-    if (pending.ph) pending.ph.style.display = 'none';
-    pending = null;
-  };
-  reader.readAsDataURL(picker.files[0]);
-});
-
-/* ── export ── */
-document.getElementById('edit-export').addEventListener('click', function(){
-  var clone = document.documentElement.cloneNode(true);
-  clone.querySelectorAll('[data-edit-ui]').forEach(function(el){ el.remove(); });
-  clone.querySelectorAll('[contenteditable]').forEach(function(el){
-    el.removeAttribute('contenteditable'); el.removeAttribute('spellcheck');
-  });
-  clone.querySelectorAll('.active').forEach(function(el){ el.classList.remove('active'); });
-  clone.querySelectorAll('input:not([type=file])').forEach(function(el){ el.value=''; });
-  var cs=clone.querySelector('#signin'); if(cs) cs.removeAttribute('data-open');
-  var ct=clone.querySelector('#signin-toggle'); if(ct) ct.setAttribute('aria-expanded','false');
-  var cm=clone.querySelector('#signin-msg'); if(cm) cm.textContent='';
-  var cb=clone.querySelector('body'); if(cb) cb.classList.remove('is-editing');
-  /* re-attach the toolbar so it's there next time */
-  var bar = document.querySelector('.bar');
-  if (bar && cb){ var fb=bar.cloneNode(true); fb.querySelectorAll('[contenteditable]').forEach(function(el){el.removeAttribute('contenteditable');}); cb.appendChild(fb); }
-  var picker2=clone.querySelector('#img-picker'); if(picker2) picker2.remove();
-  /* inject a fresh picker into the export */
-  var sc=clone.querySelector('body'); if(sc){ var np=document.createElement('input'); np.type='file'; np.id='img-picker'; np.accept='image/*'; np.style.display='none'; sc.appendChild(np); }
-  var html='<!DOCTYPE html>\n'+clone.outerHTML;
-  var url=URL.createObjectURL(new Blob([html],{type:'text/html'}));
-  var a=document.createElement('a'); a.href=url; a.download='index.html';
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-});
+  /* =============== boot =============== */
+  scanVideos();
+})();
 </script>
 </body>
 </html>
